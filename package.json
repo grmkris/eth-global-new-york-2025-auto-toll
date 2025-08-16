@@ -3,5 +3,14 @@
   "private": true,
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "scripts": {
+    "lint": "npx ultracite lint",
+    "format": "npx ultracite format",
+    "format:unsafe": "npx ultracite format --unsafe"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.2.0",
+    "ultracite": "5.1.8"
+  }
 }
