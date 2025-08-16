@@ -1,21 +1,21 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 const envSchema = z.object({
   // Wallet mnemonic (optional - will generate if not provided)
   MNEMONIC: z.string().optional(),
-  
+
   // Wallet configuration
   ACCOUNT_INDEX: z.coerce.number().default(0),
-  
-  // Server configuration  
-  SERVER_URL: z.string().url().default("http://localhost:3000"),
+
+  // Server configuration
+  SERVER_URL: z.string().url().default('http://localhost:3000'),
 });
 
 // Parse and validate environment variables
-const parsedEnv = envSchema.safeParse(process.env);
+const parsedEnv = envSchema.safeParse(Bun.env);
 
 if (!parsedEnv.success) {
-  console.error("❌ Invalid MCP environment variables:");
+  console.error('❌ Invalid MCP environment variables:');
   console.error(parsedEnv.error.format());
   process.exit(1);
 }

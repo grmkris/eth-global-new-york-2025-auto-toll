@@ -11,7 +11,7 @@
     "setup": "bun db:generate && bun db:migrate && bun ./src/scripts/seed-endpoints.ts"
   },
   "dependencies": {
-    "@coinbase/cdp-sdk": "^1.35.0",
+    "@coinbase/cdp-sdk": "latest",
     "drizzle-orm": "latest",
     "hono": "latest",
     "nanoid": "latest",

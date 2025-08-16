@@ -1,135 +1,140 @@
-# x402 MCP Server for Claude
+# x402 MCP Server for Claude Desktop
 
-This MCP (Model Context Protocol) server enables Claude to interact with the x402 API marketplace, providing wallet management and automatic payment handling for paid APIs.
+MCP server that enables Claude to interact with x402 payment-enabled APIs and manage onchain wallets on Base Sepolia.
 
-## Features
-
-- 🔑 Local wallet management with mnemonic phrases
-- 💰 Automatic x402 payment handling for paid APIs
-- 🔍 Browse and search available APIs
-- 📡 Call APIs with automatic payment if required
-- 💳 Check wallet balance (ETH and USDC)
-- 🔄 Generate new wallets on demand
-
-## Available Tools
-
-### `wallet_info`
-Get your local wallet address and balance on Base Sepolia.
-
-### `generate_wallet`
-Generate a new wallet for x402 payments. Returns a mnemonic phrase that should be saved securely.
-
-### `list_apis`
-Browse available APIs in the marketplace. Supports optional search filtering.
-
-### `call_api`
-Call an API endpoint with automatic x402 payment handling if required.
-
-### `api_info`
-Get detailed information about a specific API including pricing and endpoint details.
-
-## Setup
+## Quick Setup for Claude Desktop
 
 ### 1. Install Dependencies
 
-From the repository root, install all dependencies:
-
 ```bash
+cd packages/mcp
 bun install
 ```
 
-This will install dependencies for all packages in the monorepo, including the MCP package.
+### 2. Configure Claude Desktop
 
-### 2. Configure Environment
+Add to your Claude Desktop config:
 
-Create a `.env` file in the MCP package directory:
-
-```env
-# Optional: Your wallet mnemonic (will generate if not provided)
-MNEMONIC="your twelve word mnemonic phrase here"
-
-# Server URL (default: http://localhost:3000)
-SERVER_URL=http://localhost:3000
-
-# Wallet configuration
-ACCOUNT_INDEX=0
-```
-
-### 3. Build the MCP Server
-
-```bash
-bun run build
-```
-
-### 4. Configure Claude Desktop
-
-Add the MCP server to your Claude Desktop configuration:
-
-**macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`
+**macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`  
 **Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
 
 ```json
 {
   "mcpServers": {
     "x402-marketplace": {
-      "command": "node",
-      "args": ["/path/to/packages/mcp/dist/mcp-server.js"],
+      "command": "bun",
+      "args": [
+        "/absolute/path/to/packages/mcp/mcp-server.ts"
+      ],
       "env": {
-        "MNEMONIC": "your wallet mnemonic here",
-        "SERVER_URL": "http://localhost:3000"
+        "MNEMONIC": "your twelve word mnemonic phrase goes here",
+        "SERVER_URL": "http://localhost:3000",
+        "ACCOUNT_INDEX": "0"
       }
     }
   }
 }
 ```
 
-## Development
+**Important:** Replace `/absolute/path/to/` with your actual project path.
 
-### Run in Development Mode
+### 3. Set Up Wallet
 
+**Option A: Use existing wallet**
+- Add your mnemonic to the config above
+
+**Option B: Generate new wallet**
+- Start without MNEMONIC - it will generate one
+- Copy the generated mnemonic and add to config
+- Fund wallet with testnet tokens:
+  - ETH: https://www.basefaucet.com/
+  - USDC: https://faucet.circle.com/
+
+### 4. Start Services
+
+First, start the x402 server:
 ```bash
-bun run dev
+cd ../server
+bun dev
 ```
 
-### Testing
+Then restart Claude Desktop to load the MCP server.
 
-Test the MCP server connectivity:
+## Available MCP Tools
 
+### `wallet_info`
+Check your wallet balance and address
+- Shows ETH and USDC balances
+- Displays wallet address
+- Network: Base Sepolia
+
+### `generate_wallet`
+Generate a new wallet for x402 payments
+- Creates new mnemonic phrase
+- Returns wallet address
+- Save the mnemonic securely!
+
+### `list_apis`
+Browse available APIs in the marketplace
+- Optional search parameter
+- Shows API names, IDs, and prices
+- Indicates free vs paid endpoints
+
+### `api_info`
+Get detailed information about a specific API
+- Input: API ID
+- Returns full endpoint details
+- Shows payment requirements
+
+### `call_api`
+Execute API calls with automatic x402 payment
+- Handles both free and paid endpoints
+- Automatic payment for x402-protected APIs
+- Supports GET, POST, PUT, DELETE
+- Returns response and payment details
+
+## Example Usage in Claude
+
+Ask Claude:
+- "List available APIs"
+- "Get info about API xyz123"
+- "Call API xyz123 with path /data"
+- "Check my wallet balance"
+- "Generate a new wallet"
+
+## Development Mode
+
+For testing with bun directly:
 ```bash
-bun mcp-server.ts
+cd packages/mcp
+bun dev
 ```
 
-## Wallet Management
+## Production Build
 
-### Getting Testnet Funds
+To build for production:
+```bash
+bun build mcp-server.ts --outdir dist --target node
+```
 
-- **ETH (Base Sepolia)**: https://www.basefaucet.com/
-- **USDC (Base Sepolia)**: https://faucet.circle.com/
-
-### Security
-
-- Store your mnemonic phrase securely
-- Never share your mnemonic phrase
-- Use a dedicated wallet for testing
-- Keep only small amounts for API payments
-
-## Network Information
-
-- **Network**: Base Sepolia
-- **Chain ID**: 84532
-- **USDC Contract**: `0x036CbD53842c5426634e7929541eC2318f3dCF7e`
+Then update Claude config to use:
+```json
+{
+  "command": "node",
+  "args": ["/path/to/packages/mcp/dist/mcp-server.js"]
+}
+```
 
 ## Troubleshooting
 
-### Wallet not found
-If you see "No MNEMONIC found", the server will generate an ephemeral wallet. Save the generated mnemonic to persist the wallet.
+1. **MCP not showing in Claude**: Restart Claude Desktop after config changes
+2. **Wallet has no funds**: Get testnet tokens from faucets above
+3. **Server connection failed**: Ensure x402 server is running on port 3000
+4. **Payment failed**: Check USDC balance for paid endpoints
+5. **Path issues**: Use absolute paths in Claude config
 
-### Insufficient funds
-Ensure your wallet has sufficient ETH for gas and USDC for API payments. Use the testnet faucets listed above.
+## Network
 
-### Connection issues
-Verify the SERVER_URL points to your running x402 marketplace server.
-
-## License
-
-MIT
+- Chain: Base Sepolia
+- Chain ID: 84532
+- USDC Contract: 0x036CbD53842c5426634e7929541eC2318f3dCF7e

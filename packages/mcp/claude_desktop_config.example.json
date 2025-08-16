@@ -1,9 +1,9 @@
 {
   "mcpServers": {
     "x402-marketplace": {
-      "command": "node",
+      "command": "bun",
       "args": [
-        "/absolute/path/to/packages/mcp/dist/mcp-server.js"
+        "/absolute/path/to/packages/mcp/mcp-server.ts"
       ],
       "env": {
         "MNEMONIC": "your twelve word mnemonic phrase goes here for wallet",
