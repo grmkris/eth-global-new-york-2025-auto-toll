@@ -14,7 +14,10 @@
     "db:up": "docker-compose up -d",
     "db:down": "docker-compose down",
     "db:reset": "docker-compose down -v && docker-compose up -d",
-    "db:logs": "docker-compose logs -f postgres"
+    "db:logs": "docker-compose logs -f postgres",
+    "client:address": "cd packages/client && bun run get-address",
+    "client:hello": "cd packages/client && bun run hello",
+    "client:list": "cd packages/client && bun scripts/list-apis.ts"
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.0",
