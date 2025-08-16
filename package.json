@@ -1,0 +1,7 @@
+{
+  "name": "eth-global-monorepo",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ]
+}

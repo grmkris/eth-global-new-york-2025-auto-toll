@@ -1,0 +1,13 @@
+{
+  "name": "@eth-global/shared",
+  "version": "1.0.0",
+  "private": true,
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "scripts": {
+    "build": "bun build src/index.ts --outdir=dist"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  }
+}
