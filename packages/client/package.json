@@ -1,0 +1,17 @@
+{
+  "name": "x402-client",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "get-address": "bun run scripts/get-address.ts",
+    "hello": "bun run scripts/hello-world.ts"
+  },
+  "dependencies": {
+    "viem": "latest",
+    "x402-fetch": "latest",
+    "zod": "latest"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  }
+}
