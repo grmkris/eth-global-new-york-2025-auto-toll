@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "get-address": "bun run scripts/get-address.ts",
-    "hello": "bun run scripts/hello-world.ts"
+    "hello": "bun run scripts/hello-world.ts",
+    "test-proxy": "bun run scripts/test-proxy.ts"
   },
   "dependencies": {
     "viem": "latest",
