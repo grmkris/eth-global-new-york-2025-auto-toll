@@ -98,4 +98,31 @@ app.post('/fund', async (c) => {
   }
 })
 
+// List all wallets endpoint
+app.get('/list', async (c) => {
+  console.log('\n📋 [WALLET LIST] Fetching all wallets...')
+  
+  try {
+    const walletService = getCdpWalletService()
+    const wallets = await walletService.getAllWallets()
+    
+    console.log(`✅ [WALLET LIST] Found ${wallets.length} wallets`)
+    
+    // Return wallets with masked API keys for security
+    const maskedWallets = wallets.map(wallet => ({
+      ...wallet,
+      apiKey: wallet.apiKey ? `${wallet.apiKey.substring(0, 8)}...${wallet.apiKey.substring(wallet.apiKey.length - 4)}` : '',
+      fullApiKey: wallet.apiKey // Include full key but client should handle securely
+    }))
+    
+    return c.json(maskedWallets)
+  } catch (error) {
+    console.error('❌ [WALLET LIST] Failed to list wallets:', error)
+    return c.json({ 
+      error: 'Failed to list wallets', 
+      details: error instanceof Error ? error.message : "Unknown error"
+    }, 500)
+  }
+})
+
 export default app

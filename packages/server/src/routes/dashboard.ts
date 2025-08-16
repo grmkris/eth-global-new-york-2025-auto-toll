@@ -8,7 +8,7 @@ app.get('/', (c) => {
 <!DOCTYPE html>
 <html>
 <head>
-  <title>API Registration - x402 Marketplace</title>
+  <title>Dashboard - x402 Marketplace</title>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -112,16 +112,202 @@ app.get('/', (c) => {
     .copy-btn:hover { background: #218838; }
     .hidden { display: none; }
     .loading { color: #666; }
+    
+    /* Wallet management styles */
+    .wallet-section {
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      margin-bottom: 2rem;
+    }
+    .wallet-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+    }
+    .wallet-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+    }
+    .wallet-table th {
+      text-align: left;
+      padding: 0.75rem;
+      background: #f8f9fa;
+      border-bottom: 2px solid #dee2e6;
+      font-weight: 600;
+      color: #495057;
+    }
+    .wallet-table td {
+      padding: 0.75rem;
+      border-bottom: 1px solid #dee2e6;
+      color: #212529;
+    }
+    .wallet-address {
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 0.875rem;
+    }
+    .wallet-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+    .btn-small {
+      padding: 0.25rem 0.75rem;
+      font-size: 0.875rem;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .btn-copy {
+      background: #6c757d;
+      color: white;
+    }
+    .btn-copy:hover {
+      background: #5a6268;
+    }
+    .btn-fund {
+      background: #17a2b8;
+      color: white;
+    }
+    .btn-fund:hover {
+      background: #138496;
+    }
+    .btn-generate {
+      background: #28a745;
+      color: white;
+      padding: 0.75rem 1.5rem;
+      font-size: 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .btn-generate:hover {
+      background: #218838;
+    }
+    .btn-generate:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+    .empty-state {
+      text-align: center;
+      padding: 3rem;
+      color: #6c757d;
+    }
+    .wallet-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+    .modal-content {
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      max-width: 500px;
+      width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #6c757d;
+    }
+    .wallet-details {
+      background: #f8f9fa;
+      padding: 1rem;
+      border-radius: 4px;
+      margin: 1rem 0;
+      word-break: break-all;
+    }
+    .tabs {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      border-bottom: 2px solid #dee2e6;
+    }
+    .tab {
+      padding: 0.75rem 1rem;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      color: #6c757d;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -2px;
+      transition: all 0.3s;
+    }
+    .tab.active {
+      color: #007bff;
+      border-bottom-color: #007bff;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>🚀 Register Your API</h1>
-    <p class="subtitle">Make your API available on the x402 Marketplace</p>
-    
-    <div id="status"></div>
-    
-    <form id="apiForm">
+  <h1 style="text-align: center; margin: 2rem 0;">💼 x402 Marketplace Dashboard</h1>
+  
+  <!-- Tab Navigation -->
+  <div class="tabs" style="max-width: 800px; margin: 0 auto;">
+    <button class="tab active" onclick="switchTab('wallets')">CDP Wallets</button>
+    <button class="tab" onclick="switchTab('register')">Register API</button>
+  </div>
+  
+  <!-- Wallets Tab -->
+  <div id="wallets-tab" class="tab-content active">
+    <div class="wallet-section">
+      <div class="wallet-header">
+        <div>
+          <h2>💳 CDP Wallets</h2>
+          <p style="color: #666; margin-top: 0.5rem;">Manage your payment wallets on Base Sepolia</p>
+        </div>
+        <button id="generateWalletBtn" class="btn-generate" onclick="generateWallet()">
+          Generate New Wallet
+        </button>
+      </div>
+      
+      <div id="walletStatus"></div>
+      
+      <div id="walletList">
+        <div class="empty-state">
+          <p>Loading wallets...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Register API Tab -->
+  <div id="register-tab" class="tab-content">
+    <div class="container">
+      <h2>🚀 Register Your API</h2>
+      <p class="subtitle">Make your API available on the x402 Marketplace</p>
+      
+      <div id="status"></div>
+      
+      <form id="apiForm">
       <div class="form-group">
         <label for="name">API Name*</label>
         <input type="text" id="name" name="name" required placeholder="e.g., Weather API">
@@ -180,9 +366,262 @@ app.get('/', (c) => {
     </form>
     
     <div id="result" class="hidden"></div>
+    </div>
+  </div>
+  
+  <!-- Wallet Details Modal -->
+  <div id="walletModal" class="wallet-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Wallet Details</h3>
+        <button class="modal-close" onclick="closeWalletModal()">&times;</button>
+      </div>
+      <div id="walletModalContent"></div>
+    </div>
   </div>
 
   <script>
+    // Tab switching
+    function switchTab(tab) {
+      const tabs = document.querySelectorAll('.tab');
+      const contents = document.querySelectorAll('.tab-content');
+      
+      tabs.forEach(t => t.classList.remove('active'));
+      contents.forEach(c => c.classList.remove('active'));
+      
+      if (tab === 'wallets') {
+        tabs[0].classList.add('active');
+        document.getElementById('wallets-tab').classList.add('active');
+      } else {
+        tabs[1].classList.add('active');
+        document.getElementById('register-tab').classList.add('active');
+      }
+    }
+    
+    // Load wallets on page load
+    async function loadWallets() {
+      try {
+        const response = await fetch('/api/wallet/list');
+        const wallets = await response.json();
+        
+        const walletList = document.getElementById('walletList');
+        
+        if (wallets.error) {
+          walletList.innerHTML = '<div class="error-message">Failed to load wallets: ' + wallets.error + '</div>';
+          return;
+        }
+        
+        if (!wallets || wallets.length === 0) {
+          walletList.innerHTML = \`
+            <div class="empty-state">
+              <p>No wallets created yet</p>
+              <p style="font-size: 0.875rem; margin-top: 0.5rem;">Click "Generate New Wallet" to create your first CDP wallet</p>
+            </div>
+          \`;
+          return;
+        }
+        
+        let tableHtml = `
+          <table class="wallet-table">
+            <thead>
+              <tr>
+                <th>Address</th>
+                <th>API Key</th>
+                <th>Network</th>
+                <th>Balance</th>
+                <th>Created</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+        `;
+        
+        wallets.forEach(wallet => {
+          const createdDate = new Date(wallet.createdAt).toLocaleDateString();
+          tableHtml += `
+            <tr>
+              <td class="wallet-address">${wallet.accountAddress.substring(0, 6)}...${wallet.accountAddress.substring(38)}</td>
+              <td class="wallet-address">${wallet.apiKey}</td>
+              <td>${wallet.network}</td>
+              <td>$${wallet.balanceCache || '0'}</td>
+              <td>${createdDate}</td>
+              <td class="wallet-actions">
+                <button class="btn-small btn-copy" onclick="copyToClipboard('${wallet.accountAddress}', this)">Copy Address</button>
+                <button class="btn-small btn-copy" onclick="copyToClipboard('${wallet.fullApiKey}', this)">Copy API Key</button>
+                <button class="btn-small btn-fund" onclick="fundWallet('${wallet.fullApiKey}')">Fund</button>
+                <button class="btn-small btn-copy" onclick="showWalletDetails('${wallet.fullApiKey}')">Details</button>
+              </td>
+            </tr>
+          `;
+        });
+        
+        tableHtml += '</tbody></table>';
+        walletList.innerHTML = tableHtml;
+      } catch (error) {
+        document.getElementById('walletList').innerHTML = 
+          '<div class="error-message">Failed to load wallets: ' + error.message + '</div>';
+      }
+    }
+    
+    // Generate new wallet
+    async function generateWallet() {
+      const btn = document.getElementById('generateWalletBtn');
+      const statusDiv = document.getElementById('walletStatus');
+      
+      btn.disabled = true;
+      btn.textContent = 'Generating...';
+      statusDiv.innerHTML = '<div class="loading">Creating CDP wallet on Base Sepolia...</div>';
+      
+      try {
+        const response = await fetch('/api/wallet/create', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' }
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+          throw new Error(data.error || 'Failed to create wallet');
+        }
+        
+        statusDiv.innerHTML = `
+          <div class="success-message">
+            ✅ Wallet created successfully!
+            <div class="wallet-details">
+              <strong>Address:</strong> ${data.address}<br>
+              <strong>API Key:</strong> ${data.apiKey}<br>
+              <strong>Network:</strong> ${data.network}<br>
+              <strong>Account Name:</strong> ${data.accountName}
+            </div>
+            <button class="copy-btn" onclick="copyToClipboard('${data.address}', this)" style="margin-top: 1rem;">Copy Address</button>
+            <button class="copy-btn" onclick="copyToClipboard('${data.apiKey}', this)" style="margin-top: 1rem; margin-left: 0.5rem;">Copy API Key</button>
+          </div>
+        `;
+        
+        // Reload wallet list
+        setTimeout(() => {
+          loadWallets();
+          statusDiv.innerHTML = '';
+        }, 5000);
+        
+      } catch (error) {
+        statusDiv.innerHTML = '<div class="error-message">❌ ' + error.message + '</div>';
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Generate New Wallet';
+      }
+    }
+    
+    // Fund wallet
+    async function fundWallet(apiKey) {
+      const token = prompt('Which token to request from faucet? (eth or usdc)', 'usdc');
+      if (!token) return;
+      
+      const statusDiv = document.getElementById('walletStatus');
+      statusDiv.innerHTML = '<div class="loading">Requesting funds from testnet faucet...</div>';
+      
+      try {
+        const response = await fetch('/api/wallet/fund', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + apiKey
+          },
+          body: JSON.stringify({ token })
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+          throw new Error(data.error || 'Failed to fund wallet');
+        }
+        
+        statusDiv.innerHTML = `
+          <div class="success-message">
+            ✅ Wallet funded successfully with ${data.amount}!
+            <div class="wallet-details">
+              <strong>Transaction Hash:</strong> ${data.transactionHash}<br>
+              <a href="https://sepolia.basescan.org/tx/${data.transactionHash}" target="_blank">View on Explorer</a>
+            </div>
+          </div>
+        `;
+        
+        setTimeout(() => {
+          statusDiv.innerHTML = '';
+        }, 5000);
+        
+      } catch (error) {
+        statusDiv.innerHTML = '<div class="error-message">❌ ' + error.message + '</div>';
+        setTimeout(() => {
+          statusDiv.innerHTML = '';
+        }, 5000);
+      }
+    }
+    
+    // Show wallet details
+    async function showWalletDetails(apiKey) {
+      const modal = document.getElementById('walletModal');
+      const content = document.getElementById('walletModalContent');
+      
+      content.innerHTML = '<div class="loading">Loading wallet details...</div>';
+      modal.style.display = 'flex';
+      
+      try {
+        const response = await fetch('/api/wallet/info', {
+          headers: { 'Authorization': 'Bearer ' + apiKey }
+        });
+        
+        const data = await response.json();
+        
+        if (!response.ok) {
+          throw new Error(data.error || 'Failed to load wallet details');
+        }
+        
+        content.innerHTML = `
+          <div class="wallet-details">
+            <p><strong>Address:</strong> ${data.address}</p>
+            <p><strong>Account Name:</strong> ${data.accountName || 'N/A'}</p>
+            <p><strong>Network:</strong> ${data.network}</p>
+            <p><strong>Balance:</strong> $${data.balanceCache || '0'}</p>
+            <p><strong>Total Spent:</strong> $${data.totalSpent || '0'}</p>
+            <p><strong>API Calls:</strong> ${data.apiCallsCount || 0}</p>
+            <p><strong>Created:</strong> ${new Date(data.createdAt).toLocaleString()}</p>
+            <p><strong>Last Used:</strong> ${data.lastUsed ? new Date(data.lastUsed).toLocaleString() : 'Never'}</p>
+          </div>
+          <div style="margin-top: 1rem;">
+            <button class="btn-fund" onclick="fundWallet('${apiKey}')">Fund Wallet</button>
+            <button class="copy-btn" onclick="copyToClipboard('${data.address}', this)" style="margin-left: 0.5rem;">Copy Address</button>
+          </div>
+        `;
+      } catch (error) {
+        content.innerHTML = '<div class="error-message">❌ ' + error.message + '</div>';
+      }
+    }
+    
+    // Close wallet modal
+    function closeWalletModal() {
+      document.getElementById('walletModal').style.display = 'none';
+    }
+    
+    // Copy to clipboard function updated
+    function copyToClipboard(text, btn) {
+      navigator.clipboard.writeText(text).then(() => {
+        const originalText = btn ? btn.textContent : '';
+        if (btn) {
+          btn.textContent = 'Copied!';
+          setTimeout(() => {
+            btn.textContent = originalText;
+          }, 2000);
+        }
+      });
+    }
+    
+    // Load wallets when page loads
+    document.addEventListener('DOMContentLoaded', () => {
+      loadWallets();
+    });
+    
+    // Original API registration form code
     const form = document.getElementById('apiForm');
     const authType = document.getElementById('authType');
     const authKeyGroup = document.getElementById('authKeyGroup');
@@ -298,17 +737,6 @@ app.get('/', (c) => {
         submitBtn.textContent = 'Register API';
       }
     });
-    
-    function copyToClipboard(text) {
-      navigator.clipboard.writeText(text).then(() => {
-        const btn = event.target;
-        const originalText = btn.textContent;
-        btn.textContent = 'Copied!';
-        setTimeout(() => {
-          btn.textContent = originalText;
-        }, 2000);
-      });
-    }
     
     function registerAnother() {
       form.reset();

@@ -2,7 +2,7 @@ import { CdpClient } from "@coinbase/cdp-sdk";
 import { nanoid } from 'nanoid';
 import { db } from './db';
 import { wallets } from './db/schema';
-import { eq, sql } from 'drizzle-orm';
+import { eq, sql, desc } from 'drizzle-orm';
 import { env } from './env';
 
 interface CreateCdpWalletServiceParams {
@@ -200,6 +200,19 @@ export function createCdpWalletService(params: CreateCdpWalletServiceParams) {
       await db.update(wallets)
         .set({ balanceCache: balance })
         .where(eq(wallets.apiKey, apiKey));
+    },
+    
+    async getAllWallets() {
+      try {
+        const allWallets = await db.select()
+          .from(wallets)
+          .orderBy(desc(wallets.createdAt));
+        
+        return allWallets;
+      } catch (error) {
+        console.error("Failed to get all wallets:", error);
+        throw new Error("Failed to retrieve wallets from database");
+      }
     }
   };
 }
