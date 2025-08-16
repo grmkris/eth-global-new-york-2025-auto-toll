@@ -1,0 +1,25 @@
+{
+  "name": "server",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "bun --hot ./src/index.ts",
+    "start": "bun ./src/index.ts",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "bun ./src/scripts/migrate.ts",
+    "db:studio": "drizzle-kit studio",
+    "setup": "bun db:generate && bun db:migrate && bun ./src/scripts/seed-endpoints.ts"
+  },
+  "dependencies": {
+    "@coinbase/cdp-sdk": "^1.35.0",
+    "drizzle-orm": "latest",
+    "hono": "latest",
+    "nanoid": "latest",
+    "x402-hono": "latest",
+    "zod": "latest"
+  },
+  "devDependencies": {
+    "drizzle-kit": "latest",
+    "@types/bun": "latest"
+  }
+}
