@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "x402-marketplace": {
+      "command": "node",
+      "args": [
+        "/absolute/path/to/packages/mcp/dist/mcp-server.js"
+      ],
+      "env": {
+        "MNEMONIC": "your twelve word mnemonic phrase goes here for wallet",
+        "SERVER_URL": "http://localhost:3000",
+        "ACCOUNT_INDEX": "0"
+      }
+    }
+  }
+}
