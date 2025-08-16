@@ -16,8 +16,8 @@ CREATE TABLE "endpoints" (
 	"auth_type" text NOT NULL,
 	"auth_key" text,
 	"auth_value" text,
-	"wallet_address" text,
-	"price" text DEFAULT '$0.001',
+	"wallet_address" text NOT NULL,
+	"price" text DEFAULT '$0.001' NOT NULL,
 	"requires_payment" boolean DEFAULT true,
 	"created_at" timestamp DEFAULT now() NOT NULL
 );

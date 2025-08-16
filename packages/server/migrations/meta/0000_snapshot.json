@@ -1,5 +1,5 @@
 {
-  "id": "86a58ceb-d2d7-44f0-b765-22898a8499e0",
+  "id": "5c3b6790-7046-4658-a780-080569a139d6",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -137,13 +137,13 @@
           "name": "wallet_address",
           "type": "text",
           "primaryKey": false,
-          "notNull": false
+          "notNull": true
         },
         "price": {
           "name": "price",
           "type": "text",
           "primaryKey": false,
-          "notNull": false,
+          "notNull": true,
           "default": "'$0.001'"
         },
         "requires_payment": {
