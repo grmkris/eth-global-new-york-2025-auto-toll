@@ -90,6 +90,13 @@ Shows all registered APIs in the marketplace.
 ```bash
 bun scripts/get-address.ts
 ```
+### Execute 
+
+```bash
+bun scripts/test-proxy.ts 
+```
+
+
 Shows your local wallet address and balance.
 
 ## Quick Start Flows

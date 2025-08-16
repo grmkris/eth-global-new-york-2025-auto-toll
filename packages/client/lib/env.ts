@@ -1,16 +1,16 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 const envSchema = z.object({
   // For local wallet scripts (optional - only needed for some scripts)
   MNEMONIC: z.string().optional(),
-  
+
   // Server configuration
-  API_URL: z.string().url().default("http://localhost:3000"),
-  SERVER_URL: z.string().url().default("http://localhost:3000"),
-  
+  API_URL: z.string().url().default('http://localhost:3000'),
+  SERVER_URL: z.string().url().default('http://localhost:3000'),
+
   // Wallet configuration
   ACCOUNT_INDEX: z.coerce.number().default(0),
-  
+
   // Test configuration
   ENDPOINT_ID: z.string().optional(),
 });
@@ -19,7 +19,7 @@ const envSchema = z.object({
 const parsedEnv = envSchema.safeParse(Bun.env);
 
 if (!parsedEnv.success) {
-  console.error("❌ Invalid environment variables:");
+  console.error('❌ Invalid environment variables:');
   console.error(parsedEnv.error.format());
   process.exit(1);
 }

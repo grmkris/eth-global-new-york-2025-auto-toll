@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "get-address": "bun run scripts/get-address.ts",
-    "hello": "bun run scripts/hello-world.ts",
-    "test-proxy": "bun run scripts/test-proxy.ts"
+    "list": "bun run scripts/list-apis.ts",
+    "add": "bun run scripts/add-endpoint.ts",
+    "test": "bun run scripts/test-proxy.ts",
+    "wallet": "bun run scripts/get-address.ts"
   },
   "dependencies": {
     "viem": "latest",
@@ -13,6 +14,7 @@
     "zod": "latest"
   },
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "typescript": "latest"
   }
 }
