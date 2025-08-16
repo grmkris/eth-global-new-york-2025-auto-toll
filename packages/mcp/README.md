@@ -32,10 +32,13 @@ Get detailed information about a specific API including pricing and endpoint det
 
 ### 1. Install Dependencies
 
+From the repository root, install all dependencies:
+
 ```bash
-cd packages/mcp
 bun install
 ```
+
+This will install dependencies for all packages in the monorepo, including the MCP package.
 
 ### 2. Configure Environment
 

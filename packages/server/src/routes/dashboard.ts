@@ -382,7 +382,7 @@ app.get('/', (c) => {
 
   <script>
     // Tab switching
-    function switchTab(tab) {
+    window.switchTab = function(tab) {
       const tabs = document.querySelectorAll('.tab');
       const contents = document.querySelectorAll('.tab-content');
       
@@ -399,7 +399,7 @@ app.get('/', (c) => {
     }
     
     // Load wallets on page load
-    async function loadWallets() {
+    window.loadWallets = async function() {
       try {
         const response = await fetch('/api/wallet/list');
         const wallets = await response.json();
@@ -421,38 +421,24 @@ app.get('/', (c) => {
           return;
         }
         
-        let tableHtml = `
-          <table class="wallet-table">
-            <thead>
-              <tr>
-                <th>Address</th>
-                <th>API Key</th>
-                <th>Network</th>
-                <th>Balance</th>
-                <th>Created</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-        `;
+        let tableHtml = '<table class="wallet-table"><thead><tr>' +
+          '<th>Address</th><th>API Key</th><th>Network</th><th>Balance</th>' +
+          '<th>Created</th><th>Actions</th></tr></thead><tbody>';
         
         wallets.forEach(wallet => {
           const createdDate = new Date(wallet.createdAt).toLocaleDateString();
-          tableHtml += `
-            <tr>
-              <td class="wallet-address">${wallet.accountAddress.substring(0, 6)}...${wallet.accountAddress.substring(38)}</td>
-              <td class="wallet-address">${wallet.apiKey}</td>
-              <td>${wallet.network}</td>
-              <td>$${wallet.balanceCache || '0'}</td>
-              <td>${createdDate}</td>
-              <td class="wallet-actions">
-                <button class="btn-small btn-copy" onclick="copyToClipboard('${wallet.accountAddress}', this)">Copy Address</button>
-                <button class="btn-small btn-copy" onclick="copyToClipboard('${wallet.fullApiKey}', this)">Copy API Key</button>
-                <button class="btn-small btn-fund" onclick="fundWallet('${wallet.fullApiKey}')">Fund</button>
-                <button class="btn-small btn-copy" onclick="showWalletDetails('${wallet.fullApiKey}')">Details</button>
-              </td>
-            </tr>
-          `;
+          tableHtml += '<tr>' +
+            '<td class="wallet-address">' + wallet.accountAddress.substring(0, 6) + '...' + wallet.accountAddress.substring(38) + '</td>' +
+            '<td class="wallet-address">' + wallet.apiKey + '</td>' +
+            '<td>' + wallet.network + '</td>' +
+            '<td>$' + (wallet.balanceCache || '0') + '</td>' +
+            '<td>' + createdDate + '</td>' +
+            '<td class="wallet-actions">' +
+            '<button class="btn-small btn-copy" onclick="copyToClipboard(&quot;' + wallet.accountAddress + '&quot;, this)">Copy Address</button>' +
+            '<button class="btn-small btn-copy" onclick="copyToClipboard(&quot;' + wallet.fullApiKey + '&quot;, this)">Copy API Key</button>' +
+            '<button class="btn-small btn-fund" onclick="fundWallet(&quot;' + wallet.fullApiKey + '&quot;)">Fund</button>' +
+            '<button class="btn-small btn-copy" onclick="showWalletDetails(&quot;' + wallet.fullApiKey + '&quot;)">Details</button>' +
+            '</td></tr>';
         });
         
         tableHtml += '</tbody></table>';
@@ -464,7 +450,7 @@ app.get('/', (c) => {
     }
     
     // Generate new wallet
-    async function generateWallet() {
+    window.generateWallet = async function() {
       const btn = document.getElementById('generateWalletBtn');
       const statusDiv = document.getElementById('walletStatus');
       
@@ -484,19 +470,17 @@ app.get('/', (c) => {
           throw new Error(data.error || 'Failed to create wallet');
         }
         
-        statusDiv.innerHTML = `
-          <div class="success-message">
-            ✅ Wallet created successfully!
-            <div class="wallet-details">
-              <strong>Address:</strong> ${data.address}<br>
-              <strong>API Key:</strong> ${data.apiKey}<br>
-              <strong>Network:</strong> ${data.network}<br>
-              <strong>Account Name:</strong> ${data.accountName}
-            </div>
-            <button class="copy-btn" onclick="copyToClipboard('${data.address}', this)" style="margin-top: 1rem;">Copy Address</button>
-            <button class="copy-btn" onclick="copyToClipboard('${data.apiKey}', this)" style="margin-top: 1rem; margin-left: 0.5rem;">Copy API Key</button>
-          </div>
-        `;
+        statusDiv.innerHTML = '<div class="success-message">' +
+          '✅ Wallet created successfully!' +
+          '<div class="wallet-details">' +
+          '<strong>Address:</strong> ' + data.address + '<br>' +
+          '<strong>API Key:</strong> ' + data.apiKey + '<br>' +
+          '<strong>Network:</strong> ' + data.network + '<br>' +
+          '<strong>Account Name:</strong> ' + data.accountName +
+          '</div>' +
+          '<button class="copy-btn" onclick="copyToClipboard(&quot;' + data.address + '&quot;, this)" style="margin-top: 1rem;">Copy Address</button>' +
+          '<button class="copy-btn" onclick="copyToClipboard(&quot;' + data.apiKey + '&quot;, this)" style="margin-top: 1rem; margin-left: 0.5rem;">Copy API Key</button>' +
+          '</div>';
         
         // Reload wallet list
         setTimeout(() => {
@@ -513,7 +497,7 @@ app.get('/', (c) => {
     }
     
     // Fund wallet
-    async function fundWallet(apiKey) {
+    window.fundWallet = async function(apiKey) {
       const token = prompt('Which token to request from faucet? (eth or usdc)', 'usdc');
       if (!token) return;
       
@@ -536,15 +520,12 @@ app.get('/', (c) => {
           throw new Error(data.error || 'Failed to fund wallet');
         }
         
-        statusDiv.innerHTML = `
-          <div class="success-message">
-            ✅ Wallet funded successfully with ${data.amount}!
-            <div class="wallet-details">
-              <strong>Transaction Hash:</strong> ${data.transactionHash}<br>
-              <a href="https://sepolia.basescan.org/tx/${data.transactionHash}" target="_blank">View on Explorer</a>
-            </div>
-          </div>
-        `;
+        statusDiv.innerHTML = '<div class="success-message">' +
+          '✅ Wallet funded successfully with ' + data.amount + '!' +
+          '<div class="wallet-details">' +
+          '<strong>Transaction Hash:</strong> ' + data.transactionHash + '<br>' +
+          '<a href="https://sepolia.basescan.org/tx/' + data.transactionHash + '" target="_blank">View on Explorer</a>' +
+          '</div></div>';
         
         setTimeout(() => {
           statusDiv.innerHTML = '';
@@ -559,7 +540,7 @@ app.get('/', (c) => {
     }
     
     // Show wallet details
-    async function showWalletDetails(apiKey) {
+    window.showWalletDetails = async function(apiKey) {
       const modal = document.getElementById('walletModal');
       const content = document.getElementById('walletModalContent');
       
@@ -577,34 +558,32 @@ app.get('/', (c) => {
           throw new Error(data.error || 'Failed to load wallet details');
         }
         
-        content.innerHTML = `
-          <div class="wallet-details">
-            <p><strong>Address:</strong> ${data.address}</p>
-            <p><strong>Account Name:</strong> ${data.accountName || 'N/A'}</p>
-            <p><strong>Network:</strong> ${data.network}</p>
-            <p><strong>Balance:</strong> $${data.balanceCache || '0'}</p>
-            <p><strong>Total Spent:</strong> $${data.totalSpent || '0'}</p>
-            <p><strong>API Calls:</strong> ${data.apiCallsCount || 0}</p>
-            <p><strong>Created:</strong> ${new Date(data.createdAt).toLocaleString()}</p>
-            <p><strong>Last Used:</strong> ${data.lastUsed ? new Date(data.lastUsed).toLocaleString() : 'Never'}</p>
-          </div>
-          <div style="margin-top: 1rem;">
-            <button class="btn-fund" onclick="fundWallet('${apiKey}')">Fund Wallet</button>
-            <button class="copy-btn" onclick="copyToClipboard('${data.address}', this)" style="margin-left: 0.5rem;">Copy Address</button>
-          </div>
-        `;
+        content.innerHTML = '<div class="wallet-details">' +
+          '<p><strong>Address:</strong> ' + data.address + '</p>' +
+          '<p><strong>Account Name:</strong> ' + (data.accountName || 'N/A') + '</p>' +
+          '<p><strong>Network:</strong> ' + data.network + '</p>' +
+          '<p><strong>Balance:</strong> $' + (data.balanceCache || '0') + '</p>' +
+          '<p><strong>Total Spent:</strong> $' + (data.totalSpent || '0') + '</p>' +
+          '<p><strong>API Calls:</strong> ' + (data.apiCallsCount || 0) + '</p>' +
+          '<p><strong>Created:</strong> ' + new Date(data.createdAt).toLocaleString() + '</p>' +
+          '<p><strong>Last Used:</strong> ' + (data.lastUsed ? new Date(data.lastUsed).toLocaleString() : 'Never') + '</p>' +
+          '</div>' +
+          '<div style="margin-top: 1rem;">' +
+          '<button class="btn-fund" onclick="fundWallet(&quot;' + apiKey + '&quot;)">Fund Wallet</button>' +
+          '<button class="copy-btn" onclick="copyToClipboard(&quot;' + data.address + '&quot;, this)" style="margin-left: 0.5rem;">Copy Address</button>' +
+          '</div>';
       } catch (error) {
         content.innerHTML = '<div class="error-message">❌ ' + error.message + '</div>';
       }
     }
     
     // Close wallet modal
-    function closeWalletModal() {
+    window.closeWalletModal = function() {
       document.getElementById('walletModal').style.display = 'none';
     }
     
     // Copy to clipboard function updated
-    function copyToClipboard(text, btn) {
+    window.copyToClipboard = function(text, btn) {
       navigator.clipboard.writeText(text).then(() => {
         const originalText = btn ? btn.textContent : '';
         if (btn) {
@@ -618,7 +597,7 @@ app.get('/', (c) => {
     
     // Load wallets when page loads
     document.addEventListener('DOMContentLoaded', () => {
-      loadWallets();
+      window.loadWallets();
     });
     
     // Original API registration form code
@@ -738,7 +717,7 @@ app.get('/', (c) => {
       }
     });
     
-    function registerAnother() {
+    window.registerAnother = function() {
       form.reset();
       form.style.display = 'block';
       result.classList.add('hidden');
