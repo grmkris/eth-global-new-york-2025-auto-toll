@@ -17,7 +17,11 @@
     "db:logs": "docker-compose logs -f postgres",
     "client:address": "cd packages/client && bun run get-address",
     "client:hello": "cd packages/client && bun run hello",
-    "client:list": "cd packages/client && bun scripts/list-apis.ts"
+    "client:list": "cd packages/client && bun scripts/list-apis.ts",
+    "mcp:install": "cd packages/mcp && bun install",
+    "mcp:build": "cd packages/mcp && bun run build",
+    "mcp:dev": "cd packages/mcp && bun run dev",
+    "mcp:start": "cd packages/mcp && bun run start"
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.0",
