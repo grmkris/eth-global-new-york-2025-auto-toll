@@ -7,7 +7,14 @@
   "scripts": {
     "lint": "npx ultracite lint",
     "format": "npx ultracite format",
-    "format:unsafe": "npx ultracite format --unsafe"
+    "format:unsafe": "npx ultracite format --unsafe",
+    "server:dev": "cd packages/server && bun dev",
+    "server:start": "cd packages/server && bun start",
+    "server:setup": "cd packages/server && bun setup",
+    "db:up": "docker-compose up -d",
+    "db:down": "docker-compose down",
+    "db:reset": "docker-compose down -v && docker-compose up -d",
+    "db:logs": "docker-compose logs -f postgres"
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.0",
