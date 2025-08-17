@@ -1,6 +1,6 @@
-# x402 MCP Server for Claude Desktop
+# AutoToll MCP Server for Claude Desktop
 
-MCP server that enables Claude to interact with x402 payment-enabled APIs and manage onchain wallets on Base Sepolia.
+MCP server that enables Claude to interact with AutoToll payment-enabled APIs and manage onchain wallets on Base Sepolia. Every API is a road, every request pays a toll - all automated for AI agents.
 
 ## Quick Setup for Claude Desktop
 

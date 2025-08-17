@@ -1,11 +1,11 @@
 {
-  "name": "@eth-global/mcp-marketplace",
+  "name": "@autotoll/mcp-server",
   "version": "1.0.0",
-  "description": "MCP server for x402 API marketplace with onchain wallet support",
+  "description": "MCP server for AutoToll - automated API micropayments with onchain wallet support",
   "type": "module",
   "main": "dist/mcp-server.js",
   "bin": {
-    "x402-mcp": "./dist/mcp-server.js"
+    "autotoll-mcp": "./dist/mcp-server.js"
   },
   "scripts": {
     "build": "bun build mcp-server.ts --outdir dist --target node",
@@ -25,9 +25,11 @@
   "keywords": [
     "mcp",
     "claude",
+    "autotoll",
     "x402",
     "api",
-    "marketplace",
+    "micropayments",
+    "toll",
     "wallet",
     "onchain",
     "base",

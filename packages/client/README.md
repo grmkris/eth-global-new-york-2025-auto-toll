@@ -1,6 +1,6 @@
-# x402 Client
+# AutoToll Client
 
-A client for testing and interacting with x402-enabled proxy endpoints that support micropayments on Base Sepolia.
+A client for testing and interacting with AutoToll-enabled API endpoints that support automated micropayments on Base Sepolia. Every API is a road, every request pays a toll.
 
 ## Setup
 

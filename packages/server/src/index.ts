@@ -22,7 +22,7 @@ app.route('/dashboard', dashboardRoutes) // /dashboard
 // Root endpoint
 app.get('/', (c) => {
   return c.json({ 
-    message: 'x402 API Marketplace',
+    message: 'AutoToll - Automated API Micropayments',
     endpoints: {
       'GET /endpoints': 'Browse all available APIs (HTML view)',
       'POST /endpoints': 'Register new API endpoint',

@@ -8,7 +8,7 @@ app.get('/', (c) => {
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Dashboard - x402 Marketplace</title>
+  <title>Dashboard - AutoToll</title>
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -268,7 +268,8 @@ app.get('/', (c) => {
   </style>
 </head>
 <body>
-  <h1 style="text-align: center; margin: 2rem 0;">💼 x402 Marketplace Dashboard</h1>
+  <h1 style="text-align: center; margin: 2rem 0;">🛣️ AutoToll Dashboard</h1>
+  <p style="text-align: center; color: #666; margin: -1rem 0 2rem 0;">Every API is a road. Every request pays a toll.</p>
   
   <!-- Tab Navigation -->
   <div class="tabs" style="max-width: 800px; margin: 0 auto;">
@@ -281,8 +282,8 @@ app.get('/', (c) => {
     <div class="wallet-section">
       <div class="wallet-header">
         <div>
-          <h2>💳 CDP Wallets</h2>
-          <p style="color: #666; margin-top: 0.5rem;">Manage your payment wallets on Base Sepolia</p>
+          <h2>💳 Toll Collection Wallets</h2>
+          <p style="color: #666; margin-top: 0.5rem;">Manage your toll collection wallets on Base Sepolia</p>
         </div>
         <button id="generateWalletBtn" class="btn-generate" onclick="generateWallet()">
           Generate New Wallet

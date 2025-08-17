@@ -60,7 +60,7 @@ async function main() {
 
   // Create MCP server
   const server = new McpServer({
-    name: 'x402-marketplace',
+    name: 'autotoll',
     version: '1.0.0',
   });
 

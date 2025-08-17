@@ -1,6 +1,6 @@
 {
   "mcpServers": {
-    "x402-marketplace": {
+    "autotoll": {
       "command": "bun",
       "args": [
         "/absolute/path/to/packages/mcp/mcp-server.ts"
