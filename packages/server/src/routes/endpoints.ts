@@ -1,17 +1,19 @@
-import { Hono } from 'hono'
-import { nanoid } from 'nanoid'
-import { db } from '../db/index'
-import { endpoints } from '../db/schema'
-import { eq } from 'drizzle-orm'
+import { Hono } from 'hono';
+import { nanoid } from 'nanoid';
+import { db } from '../db/index';
+import { endpoints } from '../db/schema';
 
-const app = new Hono()
+const app = new Hono();
 
 // Display all endpoints in HTML format
 app.get('/', async (c) => {
   try {
     // Get all endpoints from database
-    const endpointsList = await db.select().from(endpoints).orderBy(endpoints.createdAt)
-    
+    const endpointsList = await db
+      .select()
+      .from(endpoints)
+      .orderBy(endpoints.createdAt);
+
     return c.html(`
 <!DOCTYPE html>
 <html>
@@ -200,18 +202,20 @@ app.get('/', async (c) => {
           <div class="stat-label">Total APIs</div>
         </div>
         <div class="stat">
-          <div class="stat-value">${endpointsList.filter(e => !e.requiresPayment).length}</div>
+          <div class="stat-value">${endpointsList.filter((e) => !e.requiresPayment).length}</div>
           <div class="stat-label">Free APIs</div>
         </div>
         <div class="stat">
-          <div class="stat-value">${endpointsList.filter(e => e.requiresPayment).length}</div>
+          <div class="stat-value">${endpointsList.filter((e) => e.requiresPayment).length}</div>
           <div class="stat-label">Paid APIs</div>
         </div>
       </div>
     </div>
     
     <div class="content">
-      ${endpointsList.length > 0 ? `
+      ${
+        endpointsList.length > 0
+          ? `
         <div class="search-box">
           <span class="search-icon">🔍</span>
           <input type="text" id="searchInput" placeholder="Search APIs by name, URL, or wallet address...">
@@ -228,7 +232,9 @@ app.get('/', async (c) => {
             </tr>
           </thead>
           <tbody>
-            ${endpointsList.map(endpoint => `
+            ${endpointsList
+              .map(
+                (endpoint) => `
               <tr data-search="${endpoint.name} ${endpoint.targetUrl} ${endpoint.walletAddress || ''}">
                 <td>
                   <div class="endpoint-name">${endpoint.name}</div>
@@ -243,30 +249,38 @@ app.get('/', async (c) => {
                   </span>
                 </td>
                 <td>
-                  ${endpoint.requiresPayment 
-                    ? `<span class="price-badge price-paid">${endpoint.price}</span>`
-                    : `<span class="price-badge price-free">FREE</span>`
+                  ${
+                    endpoint.requiresPayment
+                      ? `<span class="price-badge price-paid">${endpoint.price}</span>`
+                      : `<span class="price-badge price-free">FREE</span>`
                   }
                 </td>
                 <td>
-                  ${endpoint.walletAddress && endpoint.walletAddress !== '0x0000000000000000000000000000000000000000' 
-                    ? `<div class="wallet-address">${endpoint.walletAddress}</div>`
-                    : `<span style="color: #ccc;">-</span>`
+                  ${
+                    endpoint.walletAddress &&
+                    endpoint.walletAddress !==
+                      '0x0000000000000000000000000000000000000000'
+                      ? `<div class="wallet-address">${endpoint.walletAddress}</div>`
+                      : `<span style="color: #ccc;">-</span>`
                   }
                 </td>
                 <td>
                   <div class="timestamp">${new Date(endpoint.createdAt).toLocaleDateString()}</div>
                 </td>
               </tr>
-            `).join('')}
+            `
+              )
+              .join('')}
           </tbody>
         </table>
-      ` : `
+      `
+          : `
         <div class="empty-state">
           <h2>No APIs Available</h2>
           <p>Start by registering your first API endpoint</p>
         </div>
-      `}
+      `
+      }
     </div>
   </div>
   
@@ -303,45 +317,60 @@ app.get('/', async (c) => {
   </script>
 </body>
 </html>
-    `)
+    `);
   } catch (error) {
-    console.error('Error fetching endpoints:', error)
-    return c.html(`
+    console.error('Error fetching endpoints:', error);
+    return c.html(
+      `
       <html>
         <body style="font-family: sans-serif; padding: 2rem;">
           <h1>Error</h1>
           <p>Failed to load endpoints. Please try again later.</p>
         </body>
       </html>
-    `, 500)
+    `,
+      500
+    );
   }
-})
+});
 
 // Register new API endpoint - POST /endpoints
 app.post('/', async (c) => {
-  console.log('\n📝 [API REGISTER] New API registration request received')
-  
+  console.log('\n📝 [API REGISTER] New API registration request received');
+
   try {
-    const body = await c.req.json()
-    const { name, targetUrl, authType, authKey, authValue, walletAddress, price = "$0.001", requiresPayment = true } = body
+    const body = await c.req.json();
+    const {
+      name,
+      targetUrl,
+      authType,
+      authKey,
+      authValue,
+      walletAddress,
+      price = '$0.001',
+      requiresPayment = true,
+    } = body;
 
-    console.log(`📌 [API REGISTER] Registering API: ${name}`)
-    console.log(`   🔗 Target: ${targetUrl}`)
-    console.log(`   💰 Price: ${requiresPayment ? price : 'FREE'}`)
-    console.log(`   🔐 Auth: ${authType}`)
+    console.log(`📌 [API REGISTER] Registering API: ${name}`);
+    console.log(`   🔗 Target: ${targetUrl}`);
+    console.log(`   💰 Price: ${requiresPayment ? price : 'FREE'}`);
+    console.log(`   🔐 Auth: ${authType}`);
 
-    if (!name || !targetUrl || !authType) {
-      console.error('❌ [API REGISTER] Missing required fields')
-      return c.json({ error: "Missing required fields: name, targetUrl, authType" }, 400)
+    if (!(name && targetUrl && authType)) {
+      console.error('❌ [API REGISTER] Missing required fields');
+      return c.json(
+        { error: 'Missing required fields: name, targetUrl, authType' },
+        400
+      );
     }
 
-    const id = nanoid(10)
-    console.log(`   🆔 Generated ID: ${id}`)
-    
+    const id = nanoid(10);
+    console.log(`   🆔 Generated ID: ${id}`);
+
     if (requiresPayment && walletAddress) {
-      console.log(`   📍 Payments to: ${walletAddress}`)
+      console.log(`   📍 Payments to: ${walletAddress}`);
     }
-    
+
     // Insert into database
     await db.insert(endpoints).values({
       id,
@@ -352,51 +381,46 @@ app.post('/', async (c) => {
       authValue,
       walletAddress,
       price,
-      requiresPayment
-    })
+      requiresPayment,
+    });
 
     // No need for old payment config anymore
 
-    const proxyUrl = requiresPayment ? `/paid-proxy/${id}` : `/proxy/${id}`
-    console.log(`✅ [API REGISTER] API registered successfully!`)
-    console.log(`   🚀 Proxy URL: ${proxyUrl}`)
-    
+    const proxyUrl = requiresPayment ? `/paid-proxy/${id}` : `/proxy/${id}`;
+    console.log('✅ [API REGISTER] API registered successfully!');
+    console.log(`   🚀 Proxy URL: ${proxyUrl}`);
+
     return c.json({
       id,
       proxy_url: proxyUrl,
-      message: `API registered successfully${requiresPayment ? ' (payment required)' : ' (free)'}`
-    })
+      message: `API registered successfully${requiresPayment ? ' (payment required)' : ' (free)'}`,
+    });
   } catch (error) {
-    console.error('❌ [API REGISTER] Failed to register endpoint:', error)
-    return c.json({ error: "Failed to register endpoint" }, 500)
+    console.error('❌ [API REGISTER] Failed to register endpoint:', error);
+    return c.json({ error: 'Failed to register endpoint' }, 500);
   }
-})
+});
 
 // List all registered APIs as JSON - GET /endpoints/json
 app.get('/json', async (c) => {
   try {
     // Get endpoints from database
-    const endpointsList = await db.select({
-      id: endpoints.id,
-      name: endpoints.name,
-      targetUrl: endpoints.targetUrl,
-      walletAddress: endpoints.walletAddress,
-      price: endpoints.price,
-      requiresPayment: endpoints.requiresPayment,
-      createdAt: endpoints.createdAt
-    }).from(endpoints)
+    const endpointsList = await db.query.endpoints.findMany();
 
-    return c.json(endpointsList.map(e => ({
-      id: e.id,
-      name: e.name,
-      proxy_url: e.requiresPayment ? `/paid-proxy/${e.id}` : `/proxy/${e.id}`,
-      wallet_address: e.walletAddress,
-      price: e.price,
-      requires_payment: e.requiresPayment
-    })))
+    return c.json(
+      endpointsList.map((e) => ({
+        id: e.id,
+        name: e.name,
+        proxy_url: e.requiresPayment ? `/paid-proxy/${e.id}` : `/proxy/${e.id}`,
+        wallet_address: e.walletAddress,
+        price: e.price,
+        requires_payment: e.requiresPayment,
+        metadata: e.metadata,
+      }))
+    );
   } catch (error) {
-    return c.json({ error: "Failed to list endpoints" }, 500)
+    return c.json({ error: 'Failed to list endpoints' }, 500);
   }
-})
+});
 
-export default app
+export default app;

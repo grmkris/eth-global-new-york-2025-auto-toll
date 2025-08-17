@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🗽 ETH GLOBAL NYC - WHERE WALL STREET MEETS WEB3 🚀</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Press+Start+2P&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000;
+            color: #fff;
+            font-family: 'Bebas Neue', cursive;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* NYC Skyline Background */
+        .skyline {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            height: 300px;
+            background: linear-gradient(to top, #1a1a2e 0%, transparent 100%);
+            z-index: -1;
+        }
+
+        .building {
+            position: absolute;
+            bottom: 0;
+            background: #0f0f23;
+            border: 2px solid #627EEA;
+            box-shadow: 0 0 20px #627EEA;
+        }
+
+        /* Times Square Ticker */
+        .ticker-wrap {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            overflow: hidden;
+            background: linear-gradient(90deg, #ff0000, #ffff00);
+            padding: 10px 0;
+            z-index: 100;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 14px;
+        }
+
+        .ticker {
+            display: flex;
+            animation: ticker 30s linear infinite;
+        }
+
+        .ticker-item {
+            padding: 0 50px;
+            white-space: nowrap;
+            color: #000;
+        }
+
+        @keyframes ticker {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 80px 20px 20px;
+        }
+
+        .main-title {
+            font-size: clamp(3rem, 10vw, 8rem);
+            text-align: center;
+            background: linear-gradient(45deg, #627EEA, #00ff88, #ff00ff, #ffff00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: glow 2s ease-in-out infinite alternate;
+            text-shadow: 0 0 30px rgba(98, 126, 234, 0.5);
+            margin-bottom: 20px;
+            line-height: 1;
+        }
+
+        @keyframes glow {
+            from { filter: brightness(1); }
+            to { filter: brightness(1.5); }
+        }
+
+        .subtitle {
+            font-size: 2rem;
+            text-align: center;
+            color: #00ff88;
+            text-shadow: 0 0 10px #00ff88;
+            margin-bottom: 30px;
+        }
+
+        /* Liberty ETH Section */
+        .liberty-section {
+            text-align: center;
+            padding: 50px 20px;
+            position: relative;
+        }
+
+        .liberty-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .liberty-img {
+            width: 100%;
+            max-width: 600px;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 0 50px rgba(98, 126, 234, 0.8);
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .laser-eyes {
+            position: absolute;
+            top: 25%;
+            left: 47%;
+            width: 6%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #ff0000, #ff0000, transparent);
+            animation: laser 2s infinite;
+            transform-origin: left center;
+        }
+
+        @keyframes laser {
+            0%, 100% { opacity: 0; }
+            50% { opacity: 1; transform: scaleX(20); }
+        }
+
+        /* Interactive Sections */
+        .interactive-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            padding: 50px 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .api-card {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            border: 3px solid #627EEA;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .api-card:hover {
+            transform: scale(1.05) rotate(1deg);
+            box-shadow: 0 0 40px #627EEA;
+        }
+
+        .api-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(98, 126, 234, 0.3), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .api-title {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: #00ff88;
+        }
+
+        .api-button {
+            background: linear-gradient(45deg, #627EEA, #00ff88);
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            color: #000;
+            border-radius: 50px;
+            cursor: pointer;
+            font-family: 'Bebas Neue', cursive;
+            font-weight: bold;
+            transition: transform 0.3s;
+            margin-top: 15px;
+        }
+
+        .api-button:hover {
+            transform: scale(1.1) rotate(-5deg);
+        }
+
+        .api-result {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            min-height: 50px;
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+
+        /* Pizza Rat Section */
+        .pizza-section {
+            padding: 50px 20px;
+            text-align: center;
+            background: linear-gradient(135deg, #1a1a2e, #0f0f23);
+        }
+
+        .pizza-rat {
+            width: 100%;
+            max-width: 500px;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            25% { transform: translateY(-10px) rotate(-2deg); }
+            75% { transform: translateY(-10px) rotate(2deg); }
+        }
+
+        /* Wall Street Bull Section */
+        .bull-section {
+            padding: 50px 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .bull-img {
+            width: 100%;
+            max-width: 800px;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 0 50px rgba(98, 126, 234, 0.8);
+        }
+
+        /* Vitalik Tracker */
+        .vitalik-tracker {
+            background: linear-gradient(135deg, #0f0f23, #1a1a2e);
+            border: 3px solid #00ff88;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 50px auto;
+            max-width: 800px;
+            text-align: center;
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
+        }
+
+        .wallet-address {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 0.8rem;
+            color: #627EEA;
+            word-break: break-all;
+            margin: 20px 0;
+        }
+
+        .balance-display {
+            font-size: 3rem;
+            color: #00ff88;
+            text-shadow: 0 0 20px #00ff88;
+            margin: 20px 0;
+        }
+
+        /* Audio Player */
+        .audio-section {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .play-button {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #ff0000, #ffff00);
+            border: 3px solid #fff;
+            color: #000;
+            font-size: 2rem;
+            cursor: pointer;
+            animation: pulse 2s infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* I Love ETH Logo */
+        .i-love-eth {
+            font-size: 4rem;
+            text-align: center;
+            margin: 30px 0;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 50px 20px;
+            background: linear-gradient(135deg, #1a1a2e, #0f0f23);
+            border-top: 3px solid #627EEA;
+        }
+
+        .footer-title {
+            font-size: 2rem;
+            color: #00ff88;
+            margin-bottom: 20px;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 3rem;
+            }
+            .interactive-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Easter Eggs */
+        .flying-taxi {
+            position: fixed;
+            font-size: 3rem;
+            animation: fly 20s linear infinite;
+            cursor: pointer;
+            z-index: 50;
+        }
+
+        @keyframes fly {
+            0% {
+                left: -100px;
+                top: 20%;
+                transform: rotate(0deg);
+            }
+            100% {
+                left: 100%;
+                top: 80%;
+                transform: rotate(360deg);
+            }
+        }
+
+        .neon-sign {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 1rem;
+            color: #ff00ff;
+            text-shadow: 0 0 20px #ff00ff, 0 0 40px #ff00ff;
+            animation: flicker 2s infinite;
+        }
+
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Times Square Ticker -->
+    <div class="ticker-wrap">
+        <div class="ticker">
+            <div class="ticker-item">📈 ETH: $2,337.42 📈</div>
+            <div class="ticker-item">🚀 GAS: 69 GWEI 🚀</div>
+            <div class="ticker-item">🍕 PIZZA COST: 0.001 ETH 🍕</div>
+            <div class="ticker-item">💎 VITALIK'S WALLET: ONLY 4.78 ETH 💎</div>
+            <div class="ticker-item">🗽 HTTP 402: PAYMENT REQUIRED & DELIVERED 🗽</div>
+            <div class="ticker-item">🚖 NYC TAXI ACCEPTS CRYPTO NOW 🚖</div>
+            <div class="ticker-item">📈 ETH: $2,337.42 📈</div>
+            <div class="ticker-item">🚀 GAS: 69 GWEI 🚀</div>
+        </div>
+    </div>
+
+    <!-- Flying Taxi Easter Egg -->
+    <div class="flying-taxi" onclick="alert('You caught a crypto taxi! Fare: 0.001 ETH')">🚕</div>
+
+    <!-- NYC Skyline -->
+    <div class="skyline">
+        <div class="building" style="left: 5%; width: 60px; height: 150px;"></div>
+        <div class="building" style="left: 15%; width: 80px; height: 200px;"></div>
+        <div class="building" style="left: 25%; width: 70px; height: 180px;"></div>
+        <div class="building" style="left: 35%; width: 90px; height: 250px;"></div>
+        <div class="building" style="left: 45%; width: 60px; height: 170px;"></div>
+        <div class="building" style="left: 55%; width: 100px; height: 220px;"></div>
+        <div class="building" style="left: 65%; width: 75px; height: 190px;"></div>
+        <div class="building" style="left: 75%; width: 85px; height: 210px;"></div>
+        <div class="building" style="left: 85%; width: 65px; height: 160px;"></div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1 class="main-title">ETH GLOBAL NYC</h1>
+        <p class="subtitle">WHERE WALL STREET MEETS WEB3</p>
+        <div class="i-love-eth">I ❤️ ETH</div>
+        <p class="neon-sign">AUTOTOLL: THE BRIDGE TO MICROPAYMENTS</p>
+    </section>
+
+    <!-- Liberty ETH Section -->
+    <section class="liberty-section">
+        <h2 style="font-size: 3rem; margin-bottom: 30px; color: #627EEA;">LADY LIBERTY HOLDS THE TORCH OF DEFI</h2>
+        <div class="liberty-container">
+            <img src="liberty-eth.png" alt="Statue of Liberty with ETH" class="liberty-img">
+            <div class="laser-eyes"></div>
+            <div class="laser-eyes" style="left: 52%;"></div>
+        </div>
+    </section>
+
+    <!-- Interactive API Section -->
+    <section class="interactive-grid">
+        <div class="api-card">
+            <h3 class="api-title">🚖 NYC TAXI WISDOM</h3>
+            <p>Get crypto advice from a NYC cab driver</p>
+            <button class="api-button" onclick="getTaxiWisdom()">GET WISDOM</button>
+            <div id="taxi-result" class="api-result"></div>
+        </div>
+
+        <div class="api-card">
+            <h3 class="api-title">🐱 BODEGA CAT FACTS</h3>
+            <p>Your local bodega cat shares knowledge</p>
+            <button class="api-button" onclick="getBodegaCat()">MEOW FACTS</button>
+            <div id="cat-result" class="api-result"></div>
+        </div>
+
+        <div class="api-card">
+            <h3 class="api-title">💰 VITALIK'S WALLET</h3>
+            <p>Live tracking of the legend himself</p>
+            <button class="api-button" onclick="checkVitalik()">CHECK BALANCE</button>
+            <div id="vitalik-result" class="api-result"></div>
+        </div>
+
+        <div class="api-card">
+            <h3 class="api-title">🎭 NYC SLANG TRANSLATOR</h3>
+            <p>Translate crypto to NYC speak</p>
+            <button class="api-button" onclick="translateSlang()">FUGGEDABOUTIT</button>
+            <div id="slang-result" class="api-result"></div>
+        </div>
+    </section>
+
+    <!-- Pizza Rat Section -->
+    <section class="pizza-section">
+        <h2 style="font-size: 3rem; margin-bottom: 30px; color: #ffff00;">PIZZA RAT'S CRYPTO HUSTLE</h2>
+        <img src="pizza-rat.png" alt="Pizza Rat with ETH" class="pizza-rat">
+        <p style="font-size: 1.5rem; margin-top: 20px;">Even the rats in NYC are hodling ETH now!</p>
+    </section>
+
+    <!-- Vitalik Tracker -->
+    <section class="vitalik-tracker">
+        <h2 style="font-size: 2.5rem; margin-bottom: 20px;">VITALIK'S WALLET TRACKER</h2>
+        <p class="wallet-address">0xd8da6bf26964af9d7eed9e03e53415d37aa96045</p>
+        <div class="balance-display">
+            <span id="eth-balance">4.78 ETH</span>
+        </div>
+        <p style="color: #627EEA; font-size: 1.5rem;">BUT $21M IN USDC THO 💸</p>
+    </section>
+
+    <!-- Wall Street Bull Section -->
+    <section class="bull-section">
+        <h2 style="font-size: 3rem; margin-bottom: 30px; color: #00ff88;">WALL STREET BULL: NOW BLOCKCHAIN POWERED</h2>
+        <img src="wall-street-bull.png" alt="Blockchain Bull" class="bull-img">
+        <p style="font-size: 1.5rem; margin-top: 20px;">Charging into Web3 at full speed!</p>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <h3 class="footer-title">BUILT AT ETH GLOBAL NYC 2025</h3>
+        <p style="font-size: 1.5rem; margin: 20px 0;">Powered by AutoToll - Where HTTP 402 Means Business</p>
+        <p style="font-size: 1.2rem;">Every API call is automatically paid via x402 protocol</p>
+        <p style="margin-top: 30px; font-size: 2rem;">🗽 WAGMI FROM NYC 🚀</p>
+    </footer>
+
+    <!-- Audio Player -->
+    <div class="audio-section">
+        <button class="play-button" onclick="toggleAudio()">🔊</button>
+        <audio id="subway-audio">
+            <source src="subway-announcement.mp3" type="audio/mpeg">
+        </audio>
+    </div>
+
+    <script>
+        // Audio Control
+        let audioPlaying = false;
+        function toggleAudio() {
+            const audio = document.getElementById('subway-audio');
+            if (!audioPlaying) {
+                audio.play();
+                audioPlaying = true;
+            } else {
+                audio.pause();
+                audioPlaying = false;
+            }
+        }
+
+        // Mock API Interactions (in real app these would call MCP endpoints)
+        function getTaxiWisdom() {
+            const wisdoms = [
+                "Yo buddy, forget the subway, blockchain is the real express route to wealth!",
+                "I've been drivin' this cab for 20 years, never seen nuthin' like this ETH thing!",
+                "You want my advice? Buy ETH and fuggedabout the rest!",
+                "Traffic on FDR? That's nothing compared to network congestion!",
+                "I told a guy about Bitcoin in 2010, he didn't listen. Don't be that guy!"
+            ];
+            document.getElementById('taxi-result').textContent = wisdoms[Math.floor(Math.random() * wisdoms.length)];
+        }
+
+        function getBodegaCat() {
+            const facts = [
+                "Bodega cats accept payment in treats or ETH, no cash.",
+                "This cat has been hodling since 2017. Still hasn't sold.",
+                "Meow meow meow... oh sorry, that means 'buy the dip' in cat.",
+                "Fun fact: Bodega cats have 9 lives and 9 different wallets.",
+                "I guard the store AND the private keys. Double duty."
+            ];
+            document.getElementById('cat-result').textContent = facts[Math.floor(Math.random() * facts.length)];
+        }
+
+        function checkVitalik() {
+            document.getElementById('vitalik-result').innerHTML = 
+                "Balance: 4.78 ETH<br>USDC: $21,294,407.67<br>Status: Still building the future";
+        }
+
+        function translateSlang() {
+            const translations = [
+                "HODL = Hold On for Dear Life (or just don't sell like a paper hands)",
+                "WAGMI = We're All Gonna Make It (NYC translation: We're takin' over!)",
+                "Diamond Hands = Stronger than a NYC pretzel",
+                "To the Moon = Higher than the Empire State Building",
+                "Rug Pull = Like when the subway doors close in your face"
+            ];
+            document.getElementById('slang-result').textContent = translations[Math.floor(Math.random() * translations.length)];
+        }
+
+        // Console Easter Egg
+        console.log('%c🗽 WELCOME TO NYC ETH GLOBAL 🗽', 'font-size: 30px; color: #627EEA; font-weight: bold;');
+        console.log('%cHTTP/402: Payment Required (and AutoToll handles it!)', 'font-size: 16px; color: #00ff88;');
+        console.log('%cFrom Wall Street to Web3 Street', 'font-size: 14px; color: #ffff00;');
+    </script>
+</body>
+</html>

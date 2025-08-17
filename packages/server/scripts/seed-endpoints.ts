@@ -28,10 +28,13 @@ async function seedEndpoints() {
       authType: 'none',
       authKey: null,
       authValue: null,
-      requiresPayment: false,
-      price: '$0.000',
-      walletAddress: '0x0000000000000000000000000000000000000000', // Free API, no wallet needed
+      requiresPayment: true,
+      price: '$0.0011',
+      walletAddress: '0x81d786b35f3EA2F39Aa17cb18d9772E4EcD97206', // Free API, no wallet needed
       createdAt: new Date(),
+      metadata: {
+        example: 'https://api.chucknorris.io/jokes/random',
+      },
     },
     {
       id: nanoid(10),
@@ -42,103 +45,74 @@ async function seedEndpoints() {
       authValue: null,
       requiresPayment: true,
       createdAt: new Date(),
-      price: '$0.001',
-      walletAddress: '0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb3', // Example wallet 1
-    },
-    {
-      id: nanoid(10),
-      name: 'Random User Generator',
-      targetUrl: 'https://randomuser.me/api',
-      authType: 'none',
-      authKey: null,
-      authValue: null,
-      requiresPayment: true,
-      createdAt: new Date(),
-      price: '$0.002',
-      walletAddress: '0x5aAeb6053f3E94C9b9A09f33669435E7Ef1BeAed', // Example wallet 2
-    },
-    {
-      id: nanoid(10),
-      name: 'JSONPlaceholder Posts',
-      targetUrl: 'https://jsonplaceholder.typicode.com/posts',
-      authType: 'none',
-      authKey: null,
-      authValue: null,
-      requiresPayment: false,
-      createdAt: new Date(),
-      price: '$0.000',
-      walletAddress: '0x0000000000000000000000000000000000000000', // Free API, no wallet needed
-    },
-    {
-      id: nanoid(10),
-      name: 'Bored API',
-      targetUrl: 'https://www.boredapi.com/api/activity',
-      authType: 'none',
-      authKey: null,
-      authValue: null,
-      requiresPayment: true,
-      createdAt: new Date(),
-      price: '$0.001',
-      walletAddress: '0x81d786b35f3EA2F39Aa17cb18d9772E4EcD97206', // Will use default wallet from env
+      price: '$0.0012',
+      walletAddress: '0x81d786b35f3EA2F39Aa17cb18d9772E4EcD97206', // Example wallet 1
+      metadata: {
+        example: 'https://catfact.ninja/fact',
+      },
     },
     // ElevenLabs TTS Endpoints - Different voices
     {
-      id: 'elevenlabs-rachel',
-      name: 'ElevenLabs TTS - Rachel',
-      targetUrl:
-        'https://api.elevenlabs.io/v1/text-to-speech/21m00Tcm4TlvDq8ikWAM',
+      id: nanoid(10),
+      name: 'ElevenLabs TTS ',
+      targetUrl: 'https://api.elevenlabs.io/v1/text-to-speech',
       authType: 'header',
       authKey: 'xi-api-key',
       authValue: elevenLabsKey,
-      requiresPayment: false, // Free for testing
+      requiresPayment: true, // Free for testing
       createdAt: new Date(),
-      price: '$0.000',
-      walletAddress: '0x0000000000000000000000000000000000000000',
+      price: '$0.014',
+      walletAddress: '0x81d786b35f3EA2F39Aa17cb18d9772E4EcD97206',
+      metadata: {
+        voices: [
+          {
+            id: 'NOpBlnGInO9m6vDvFkFC',
+            name: 'Grandpa spuds',
+          },
+          {
+            id: '21m00Tcm4TlvDq8ikWAM',
+            name: 'Rachel',
+          },
+          {
+            id: 'nPczCjzI2devNBz1zQrb',
+            name: 'Brian',
+          },
+        ],
+        exampleCurl: `curl -X POST "https://api.elevenlabs.io/v1/text-to-speech/JBFqnCBsd6RMkjVDRZzb?output_format=mp3_44100_128" \
+     -H "xi-api-key: xi-api-key" \
+     -H "Content-Type: application/json" \
+     -d '{
+  "text": "The first move is what sets everything in motion.",
+  "model_id": "eleven_multilingual_v2"
+}'`,
+      } as const,
+      // ElevenLab Sound Effects
     },
     {
-      id: 'elevenlabs-josh',
-      name: 'ElevenLabs TTS - Josh',
-      targetUrl:
-        'https://api.elevenlabs.io/v1/text-to-speech/TxGEqnHWrfWFTfGW9XjX',
+      id: nanoid(10),
+      name: 'ElevenLabs Sound Effects',
+      targetUrl: 'https://api.elevenlabs.io/v1/sound-effects',
       authType: 'header',
       authKey: 'xi-api-key',
       authValue: elevenLabsKey,
-      requiresPayment: true,
+      requiresPayment: true, // Free for testing
       createdAt: new Date(),
-      price: '$0.002',
+      price: '$0.015',
       walletAddress: '0x81d786b35f3EA2F39Aa17cb18d9772E4EcD97206',
-    },
-    {
-      id: 'elevenlabs-bella',
-      name: 'ElevenLabs TTS - Bella',
-      targetUrl:
-        'https://api.elevenlabs.io/v1/text-to-speech/EXAVITQu4vr4xnSDxMaL',
-      authType: 'header',
-      authKey: 'xi-api-key',
-      authValue: elevenLabsKey,
-      requiresPayment: true,
-      createdAt: new Date(),
-      price: '$0.002',
-      walletAddress: '0x81d786b35f3EA2F39Aa17cb18d9772E4EcD97206',
-    },
-    {
-      id: 'elevenlabs-adam',
-      name: 'ElevenLabs TTS - Adam',
-      targetUrl:
-        'https://api.elevenlabs.io/v1/text-to-speech/pNInz6obpgDQGcFmaJgB',
-      authType: 'header',
-      authKey: 'xi-api-key',
-      authValue: elevenLabsKey,
-      requiresPayment: true,
-      createdAt: new Date(),
-      price: '$0.002',
-      walletAddress: '0x81d786b35f3EA2F39Aa17cb18d9772E4EcD97206',
+      metadata: {
+        exampleCurl: `curl -X POST https://api.elevenlabs.io/v1/sound-generation \
+     -H "xi-api-key: xi-api-key" \
+     -H "Content-Type: application/json" \
+     -d '{
+  "text": "Spacious braam suitable for high-impact movie trailer moments"
+}'`,
+      } as const,
     },
     // Replicate AI Models
     {
-      id: 'replicate-sdxl',
-      name: 'Replicate - Stable Diffusion XL',
-      targetUrl: 'https://api.replicate.com/v1/models/stability-ai/sdxl/predictions',
+      id: nanoid(10),
+      name: 'Replicate',
+      targetUrl: 'https://api.replicate.com/v1',
       authType: 'bearer',
       authKey: null,
       authValue: replicateToken,
@@ -146,54 +120,105 @@ async function seedEndpoints() {
       createdAt: new Date(),
       price: '$0.003',
       walletAddress: '0x81d786b35f3EA2F39Aa17cb18d9772E4EcD97206',
-    },
-    {
-      id: 'replicate-flux-schnell',
-      name: 'Replicate - FLUX.1 Schnell',
-      targetUrl: 'https://api.replicate.com/v1/models/black-forest-labs/flux-schnell/predictions',
-      authType: 'bearer',
-      authKey: null,
-      authValue: replicateToken,
-      requiresPayment: true,
-      createdAt: new Date(),
-      price: '$0.003',
-      walletAddress: '0x81d786b35f3EA2F39Aa17cb18d9772E4EcD97206',
-    },
-    {
-      id: 'replicate-whisper',
-      name: 'Replicate - Whisper Transcription',
-      targetUrl: 'https://api.replicate.com/v1/models/openai/whisper/predictions',
-      authType: 'bearer',
-      authKey: null,
-      authValue: replicateToken,
-      requiresPayment: true,
-      createdAt: new Date(),
-      price: '$0.002',
-      walletAddress: '0x81d786b35f3EA2F39Aa17cb18d9772E4EcD97206',
-    },
-    {
-      id: 'replicate-llama-3',
-      name: 'Replicate - LLaMA 3 70B',
-      targetUrl: 'https://api.replicate.com/v1/models/meta/meta-llama-3-70b-instruct/predictions',
-      authType: 'bearer',
-      authKey: null,
-      authValue: replicateToken,
-      requiresPayment: true,
-      createdAt: new Date(),
-      price: '$0.005',
-      walletAddress: '0x81d786b35f3EA2F39Aa17cb18d9772E4EcD97206',
-    },
-    {
-      id: 'replicate-seedance',
-      name: 'Replicate - SeedDance Video Gen',
-      targetUrl: 'https://api.replicate.com/v1/models/bytedance/seedance-1-pro/predictions',
-      authType: 'bearer',
-      authKey: null,
-      authValue: replicateToken,
-      requiresPayment: true,
-      createdAt: new Date(),
-      price: '$0.020',
-      walletAddress: '0x81d786b35f3EA2F39Aa17cb18d9772E4EcD97206',
+      metadata: {
+        description: 'Replicate AI model API - supports image generation, video generation, and more',
+        usage: {
+          createPrediction: {
+            description: 'Create a new prediction (image/video generation)',
+            method: 'POST',
+            path: '/models/{owner}/{model}/predictions',
+            example: '/models/ideogram-ai/ideogram-v2a-turbo/predictions',
+          },
+          checkStatus: {
+            description: 'Check prediction status (poll until complete)',
+            method: 'GET',
+            path: '/predictions/{prediction_id}',
+            example: '/predictions/c9gsqmxzb5rmc0crpyntf64pdm',
+          },
+        },
+        examples: {
+          ideogramV2ATurbo: {
+            name: 'Ideogram V2A Turbo (Image Generation)',
+            createPrediction: {
+              method: 'POST',
+              path: '/models/ideogram-ai/ideogram-v2a-turbo/predictions',
+              body: {
+                input: {
+                  prompt: 'Vector art of a friendly robot with speech bubbles',
+                  resolution: 'None',
+                  style_type: 'None',
+                  aspect_ratio: '3:2',
+                  magic_prompt_option: 'Auto',
+                },
+              },
+            },
+            checkStatus: {
+              method: 'GET',
+              path: '/predictions/{prediction_id}',
+              description: 'Poll this endpoint until status is "succeeded"',
+              responseExample: {
+                id: 'prediction_id',
+                status: 'succeeded',
+                output: ['https://replicate.delivery/pbxt/...generated-image.png'],
+              },
+            },
+          },
+          fluxSchnell: {
+            name: 'Flux Schnell (Fast Image Generation)',
+            createPrediction: {
+              method: 'POST',
+              path: '/models/black-forest-labs/flux-schnell/predictions',
+              body: {
+                input: {
+                  prompt: 'A beautiful sunset over mountains',
+                  aspect_ratio: '16:9',
+                  output_format: 'png',
+                  output_quality: 90,
+                },
+              },
+            },
+          },
+          sdxlLightning: {
+            name: 'SDXL Lightning (Ultra-fast Image Generation)',
+            createPrediction: {
+              method: 'POST',
+              path: '/models/bytedance/sdxl-lightning-4step/predictions',
+              body: {
+                input: {
+                  prompt: 'A cyberpunk city at night, neon lights',
+                  width: 1024,
+                  height: 1024,
+                  num_inference_steps: 4,
+                },
+              },
+            },
+          },
+          videoGeneration: {
+            name: 'Video Generation',
+            createPrediction: {
+              method: 'POST',
+              path: '/models/wan-video/wan-2.2-t2v-fast/predictions',
+              body: {
+                input: {
+                  prompt: 'A sports car driving along a beach at sunset',
+                  go_fast: true,
+                  num_frames: 81,
+                  resolution: '480p',
+                  aspect_ratio: '16:9',
+                  frames_per_second: 16,
+                },
+              },
+            },
+          },
+        },
+        tips: [
+          'Always use the proxy path format: /paid-proxy/{endpoint_id}/{model_path}',
+          'For creating predictions: POST to /models/{owner}/{model}/predictions',
+          'For checking status: GET /predictions/{prediction_id}',
+          'Poll status endpoint until status becomes "succeeded" or "failed"',
+          'The output field will contain URLs to generated images/videos when complete',
+        ],
+      } as const,
     },
   ];
 
@@ -228,7 +253,7 @@ async function seedEndpoints() {
     const allEndpoints = await db.query.endpoints.findMany();
 
     console.log(`\nFound ${allEndpoints.length} endpoints:`);
-    allEndpoints.forEach((ep) => {
+    for (const ep of allEndpoints) {
       console.log(`- ${ep.name} (${ep.id})`);
       console.log(
         `  URL: ${ep.requiresPayment ? `/paid-proxy/${ep.id}` : `/proxy/${ep.id}`}`
@@ -237,7 +262,7 @@ async function seedEndpoints() {
       if (ep.walletAddress) {
         console.log(`  Wallet: ${ep.walletAddress}`);
       }
-    });
+    }
   } catch (error) {
     console.error('Failed to list endpoints:', error);
   }

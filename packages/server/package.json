@@ -8,7 +8,7 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "bun ./scripts/migrate.ts",
     "db:studio": "bun --bun drizzle-kit studio",
-    "setup": "bun db:generate && bun db:migrate && bun ./src/scripts/seed-endpoints.ts"
+    "setup": "bun db:generate && bun db:migrate && bun ./scripts/seed-endpoints.ts"
   },
   "dependencies": {
     "@coinbase/cdp-sdk": "latest",
