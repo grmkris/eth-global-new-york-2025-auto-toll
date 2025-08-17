@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoToll - Every API is a Road</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 100%);
+            color: #ffffff;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            padding: 2rem 0;
+            text-align: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .logo {
+            font-size: 3rem;
+            font-weight: bold;
+            background: linear-gradient(90deg, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+        
+        .tagline {
+            font-size: 1.2rem;
+            color: #94a3b8;
+        }
+        
+        .hero {
+            padding: 4rem 0;
+            text-align: center;
+        }
+        
+        .hero-image {
+            width: 100%;
+            max-width: 900px;
+            height: auto;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(96, 165, 250, 0.3);
+            margin-bottom: 3rem;
+            background: #1a1f3a;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .audio-section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        .audio-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #60a5fa;
+        }
+        
+        .audio-player {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        audio {
+            width: 100%;
+            outline: none;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            padding: 4rem 0;
+        }
+        
+        .feature-card {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(96, 165, 250, 0.2);
+        }
+        
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .feature-title {
+            font-size: 1.3rem;
+            margin-bottom: 0.5rem;
+            color: #a78bfa;
+        }
+        
+        .feature-description {
+            color: #cbd5e1;
+            line-height: 1.6;
+        }
+        
+        .tech-stack {
+            padding: 3rem 0;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .tech-title {
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            color: #60a5fa;
+        }
+        
+        .tech-grid {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+        
+        .tech-badge {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .tech-badge:hover {
+            background: rgba(96, 165, 250, 0.2);
+            transform: scale(1.05);
+        }
+        
+        footer {
+            padding: 2rem 0;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #64748b;
+        }
+        
+        .cta-section {
+            padding: 4rem 0;
+            text-align: center;
+            background: linear-gradient(135deg, rgba(96, 165, 250, 0.1), rgba(167, 139, 250, 0.1));
+            border-radius: 20px;
+            margin: 3rem 0;
+        }
+        
+        .cta-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(90deg, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            padding: 1rem 2rem;
+            background: linear-gradient(90deg, #60a5fa, #a78bfa);
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: transform 0.3s, box-shadow 0.3s;
+            margin: 0.5rem;
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(96, 165, 250, 0.4);
+        }
+        
+        .loading-image {
+            background: rgba(255, 255, 255, 0.05);
+            height: 500px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 20px;
+            color: #64748b;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">🛣️ AutoToll</div>
+            <div class="tagline">Every API is a road. Every request pays a toll.</div>
+        </div>
+    </header>
+    
+    <section class="hero">
+        <div class="container">
+            <div class="loading-image" id="heroImage">
+                <div>Loading generated image from Replicate FLUX...</div>
+            </div>
+            
+            <div class="audio-section">
+                <h2 class="audio-title">🎧 Listen to AutoToll's Vision</h2>
+                <div class="audio-player">
+                    <audio controls>
+                        <source src="narration.mp3" type="audio/mpeg">
+                        Your browser does not support the audio element.
+                    </audio>
+                    <p style="margin-top: 1rem; color: #64748b; font-size: 0.9rem;">
+                        Voice generated by ElevenLabs TTS via AutoToll marketplace
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <section class="features">
+        <div class="container" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem;">
+            <div class="feature-card">
+                <div class="feature-icon">🤖</div>
+                <h3 class="feature-title">Agent-First Design</h3>
+                <p class="feature-description">
+                    AI agents can discover and use APIs autonomously with automatic micropayments. No human intervention required.
+                </p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">💳</div>
+                <h3 class="feature-title">Automatic Payments</h3>
+                <p class="feature-description">
+                    Just like EZ-Pass for highways, AutoToll handles payments seamlessly. Pay only for what you use, when you use it.
+                </p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">⚡</div>
+                <h3 class="feature-title">Instant Access</h3>
+                <p class="feature-description">
+                    Start using APIs immediately. No signup, no credit cards, no monthly subscriptions. Just pure pay-per-use simplicity.
+                </p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">💰</div>
+                <h3 class="feature-title">Instant Monetization</h3>
+                <p class="feature-description">
+                    Turn any API into a revenue stream in minutes. Set your toll rates and start collecting payments automatically.
+                </p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">🔒</div>
+                <h3 class="feature-title">Built-in Security</h3>
+                <p class="feature-description">
+                    We handle API keys, authentication, and secure payment processing. Focus on your API, we'll handle the rest.
+                </p>
+            </div>
+            
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3 class="feature-title">Zero Setup Required</h3>
+                <p class="feature-description">
+                    Just provide your API URL and start collecting tolls. No complex integration, no SDK required.
+                </p>
+            </div>
+        </div>
+    </section>
+    
+    <section class="cta-section">
+        <div class="container">
+            <h2 class="cta-title">Ready to Join the API Economy?</h2>
+            <p style="font-size: 1.2rem; margin-bottom: 2rem; color: #cbd5e1;">
+                Start using or monetizing APIs with automatic micropayments today
+            </p>
+            <a href="#" class="cta-button">Browse APIs</a>
+            <a href="#" class="cta-button">Register Your API</a>
+        </div>
+    </section>
+    
+    <section class="tech-stack">
+        <div class="container">
+            <h2 class="tech-title">Powered By</h2>
+            <div class="tech-grid">
+                <div class="tech-badge">⚡ x402 Protocol</div>
+                <div class="tech-badge">🔷 Base Sepolia</div>
+                <div class="tech-badge">💵 USDC</div>
+                <div class="tech-badge">🤖 MCP</div>
+                <div class="tech-badge">🚀 Hono</div>
+                <div class="tech-badge">🐰 Bun</div>
+                <div class="tech-badge">🏗️ Coinbase CDP</div>
+            </div>
+        </div>
+    </section>
+    
+    <footer>
+        <div class="container">
+            <p>Built with ❤️ at ETHGlobal New York 2025</p>
+            <p style="margin-top: 0.5rem; font-size: 0.9rem;">
+                Experiment 001 - Landing Page with AI-generated assets
+            </p>
+        </div>
+    </footer>
+    
+    <script>
+        // Display the generated image from Replicate API
+        async function loadGeneratedImage() {
+            const predictionId = 'jmm75mazz1rm80crpq88r96gaw';
+            const pollUrl = `https://replicate.com/p/${predictionId}`;
+            
+            // Using the actual generated image URL from our API call
+            
+            const imageContainer = document.getElementById('heroImage');
+            imageContainer.innerHTML = `
+                <div style="text-align: center; width: 100%;">
+                    <img src="https://replicate.delivery/xezq/oHFDp4GX1jLGIxKQsWgy9eMjCYTXDWHEen0V6mNPebH7rdXqA/out-0.webp" 
+                         alt="AutoToll - Digital Highway" 
+                         class="hero-image"
+                         onerror="this.onerror=null; this.src='data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 800 500%22%3E%3Crect fill=%22%231a1f3a%22 width=%22800%22 height=%22500%22/%3E%3Ctext x=%22400%22 y=%22250%22 text-anchor=%22middle%22 fill=%22%2364748b%22 font-size=%2224%22%3EImage Loading...%3C/text%3E%3C/svg%3E';">
+                    <p style="margin-top: 1rem; color: #64748b; font-size: 0.9rem;">
+                        Image generated by FLUX.1 Schnell via AutoToll marketplace<br>
+                        <a href="${pollUrl}" target="_blank" style="color: #60a5fa;">View on Replicate</a>
+                    </p>
+                </div>
+            `;
+        }
+        
+        // Load image when page loads
+        window.addEventListener('load', loadGeneratedImage);
+    </script>
+</body>
+</html>

@@ -14,8 +14,80 @@ import { baseSepolia } from 'viem/chains';
 import { decodeXPaymentResponse, wrapFetchWithPayment } from 'x402-fetch';
 import { z } from 'zod/v3';
 import { env } from './env';
+import { existsSync, mkdirSync, copyFileSync } from 'fs';
+import { join } from 'path';
+import { homedir } from 'os';
 
 const SERVER_URL = env.SERVER_URL;
+const TEMP_DIR = '/tmp/autotoll';
+const DOWNLOADS_DIR = join(homedir(), 'Downloads', 'autotoll');
+
+// Ensure directories exist
+if (!existsSync(TEMP_DIR)) {
+  mkdirSync(TEMP_DIR, { recursive: true });
+}
+if (!existsSync(DOWNLOADS_DIR)) {
+  mkdirSync(DOWNLOADS_DIR, { recursive: true });
+}
+
+// Helper function to get file extension from content type
+function getFileExtension(contentType: string): string {
+  const mimeMap: Record<string, string> = {
+    'audio/mpeg': 'mp3',
+    'audio/mp3': 'mp3',
+    'audio/wav': 'wav',
+    'audio/ogg': 'ogg',
+    'audio/webm': 'webm',
+    'image/jpeg': 'jpg',
+    'image/png': 'png',
+    'image/gif': 'gif',
+    'image/webp': 'webp',
+    'video/mp4': 'mp4',
+    'video/webm': 'webm',
+    'video/ogg': 'ogv',
+    'application/pdf': 'pdf',
+    'application/octet-stream': 'bin',
+  };
+  
+  const normalizedType = contentType.toLowerCase().split(';')[0].trim();
+  return mimeMap[normalizedType] || 'bin';
+}
+
+// Helper function to save binary data to file
+async function saveBinaryToFile(
+  buffer: ArrayBuffer,
+  contentType: string,
+  apiId: string
+): Promise<{ filepath: string; downloadPath: string; filename: string; size: number } | null> {
+  try {
+    const ext = getFileExtension(contentType);
+    const timestamp = Date.now();
+    const filename = `${apiId}-${timestamp}.${ext}`;
+    const tempPath = join(TEMP_DIR, filename);
+    const downloadPath = join(DOWNLOADS_DIR, filename);
+    
+    // Use Bun's file API to write the buffer directly (no string conversion)
+    await Bun.write(tempPath, buffer);
+    
+    // Also copy to Downloads folder for easy access
+    try {
+      await Bun.write(downloadPath, buffer);
+      console.error(`📁 Saved to Downloads: ${downloadPath}`);
+    } catch (e) {
+      console.error('Could not copy to Downloads:', e);
+    }
+    
+    return {
+      filepath: tempPath,
+      downloadPath,
+      filename,
+      size: buffer.byteLength,
+    };
+  } catch (error) {
+    console.error('Failed to save binary file:', error);
+    return null;
+  }
+}
 
 // Load or generate wallet
 let MNEMONIC = env.MNEMONIC;
@@ -209,7 +281,7 @@ Get testnet funds:
         apiId: z.string(),
         path: z.string().default(''),
         params: z.record(z.any()).optional(),
-        method: z.enum(['GET', 'POST', 'PUT', 'DELETE']).default('GET'),
+        method: z.enum(['GET', 'POST', 'PUT', 'DELETE', 'PATCH']).default('GET'),
         body: z.any().optional(),
         headers: z.record(z.string()).optional(),
       },
@@ -225,9 +297,10 @@ Get testnet funds:
           throw new Error(`API with ID "${apiId}" not found`);
         }
 
-        // Build the URL
+        // Build the URL - handle trailing slashes properly
         const proxyPath = api.requires_payment ? 'paid-proxy' : 'proxy';
-        const url = new URL(`${SERVER_URL}/${proxyPath}/${apiId}${path}`);
+        const cleanPath = path ? (path.startsWith('/') ? path : `/${path}`) : '';
+        const url = new URL(`${SERVER_URL}/${proxyPath}/${apiId}${cleanPath}`);
 
         // Add query parameters
         if (params) {
@@ -236,18 +309,53 @@ Get testnet funds:
           }
         }
 
+        // Prepare headers - only set Content-Type if not provided
+        const requestHeaders: Record<string, string> = { ...headers };
+        
+        // Prepare body and auto-detect Content-Type if needed
+        let requestBody: any = undefined;
+        
+        if (body !== undefined && ['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)) {
+          // If body is already a string, pass it through
+          if (typeof body === 'string') {
+            requestBody = body;
+            // Only set Content-Type if not already set
+            if (!requestHeaders['Content-Type'] && !requestHeaders['content-type']) {
+              // Try to detect if it's JSON
+              try {
+                JSON.parse(body);
+                requestHeaders['Content-Type'] = 'application/json';
+              } catch {
+                // Not JSON, assume plain text
+                requestHeaders['Content-Type'] = 'text/plain';
+              }
+            }
+          } else if (body !== null) {
+            // Object or array - stringify as JSON
+            requestBody = JSON.stringify(body);
+            if (!requestHeaders['Content-Type'] && !requestHeaders['content-type']) {
+              requestHeaders['Content-Type'] = 'application/json';
+            }
+          }
+        }
+
         // Prepare request options
         const requestOptions: RequestInit = {
           method,
-          headers: {
-            'Content-Type': 'application/json',
-            ...headers,
-          },
+          headers: requestHeaders,
         };
 
-        if (body && (method === 'POST' || method === 'PUT')) {
-          requestOptions.body = JSON.stringify(body);
+        if (requestBody !== undefined) {
+          requestOptions.body = requestBody;
         }
+
+        // Log request details for debugging
+        console.error(`📡 [MCP] API Request Details:
+  API: ${api.name} (${apiId})
+  URL: ${url.toString()}
+  Method: ${method}
+  Headers: ${JSON.stringify(requestHeaders, null, 2)}
+  Body: ${requestBody ? (typeof requestBody === 'string' ? requestBody.substring(0, 200) : JSON.stringify(requestBody).substring(0, 200)) : 'none'}`);
 
         // Make the request
         let response: Response;
@@ -260,7 +368,7 @@ Get testnet funds:
 
         if (api.requires_payment) {
           // Use x402-fetch for paid endpoints
-          console.error(`Making paid request to ${api.name}...`);
+          console.error(`💳 Making paid request to ${api.name}...`);
           response = await fetchWithPayment(url.toString(), requestOptions);
 
           // Decode payment info if present
@@ -273,24 +381,71 @@ Get testnet funds:
           response = await fetch(url.toString(), requestOptions);
         }
 
-        // Parse response
-        const contentType = response.headers.get('content-type');
+        // Parse response based on content type
+        const contentType = response.headers.get('content-type') || '';
         let data: string;
+        let responseFormat = 'text';
 
-        if (contentType?.includes('application/json')) {
-          const json = await response.json();
-          data = JSON.stringify(json, null, 2);
+        console.error(`📥 Response Content-Type: ${contentType}`);
+
+        if (contentType.includes('application/json')) {
+          try {
+            const json = await response.json();
+            data = JSON.stringify(json, null, 2);
+            responseFormat = 'json';
+          } catch (e) {
+            // Failed to parse as JSON, treat as text
+            data = await response.text();
+          }
+        } else if (
+          contentType.includes('audio/') || 
+          contentType.includes('image/') || 
+          contentType.includes('video/') ||
+          contentType.includes('application/octet-stream')
+        ) {
+          // Binary response - save to file
+          const buffer = await response.arrayBuffer();
+          const fileInfo = await saveBinaryToFile(buffer, contentType, apiId);
+          
+          if (fileInfo) {
+            // Successfully saved to file
+            const sizeKB = (fileInfo.size / 1024).toFixed(1);
+            data = `Binary file saved successfully
+Temp: ${fileInfo.filepath}
+Downloads: ${fileInfo.downloadPath}
+Size: ${sizeKB} KB
+Type: ${contentType}
+
+To play/view the file:
+${contentType.includes('audio/') ? `• Play: afplay "${fileInfo.downloadPath}"` : ''}
+${contentType.includes('image/') ? `• View: open "${fileInfo.downloadPath}"` : ''}
+${contentType.includes('video/') ? `• Play: open "${fileInfo.downloadPath}"` : ''}`;
+            responseFormat = 'binary_file';
+          } else {
+            // Fallback to base64 if file saving failed
+            const base64 = Buffer.from(buffer).toString('base64');
+            data = `[Binary data - ${buffer.byteLength} bytes]
+Base64: ${base64.substring(0, 100)}...${base64.length > 100 ? '(truncated)' : ''}
+Content-Type: ${contentType}`;
+            responseFormat = 'binary';
+            
+            // For audio responses, provide a data URI that can be played
+            if (contentType.includes('audio/')) {
+              data += `\n\nAudio Data URI (for playback): data:${contentType};base64,${base64.substring(0, 200)}...`;
+            }
+          }
         } else {
+          // Default to text
           data = await response.text();
         }
 
         // Format result
         let resultText = `API: ${api.name}
 Status: ${response.status} ${response.statusText}
+Response Format: ${responseFormat}
 Response:
 ${data}`;
 
-        console.log(paymentInfo);
         if (paymentInfo) {
           const explorerUrl = `https://sepolia.basescan.org/tx/${paymentInfo.transaction}`;
           resultText += `\n\n💰 Payment Details:
@@ -309,11 +464,20 @@ Network: base-sepolia`;
           ],
         };
       } catch (error: any) {
+        // Enhanced error reporting
+        const errorDetails = `Error calling API: ${error.message}
+API ID: ${apiId}
+Path: ${path || '/'}
+Method: ${method}
+Error Stack: ${error.stack?.split('\n').slice(0, 3).join('\n')}`;
+        
+        console.error(`❌ [MCP] API Call Error:`, error);
+        
         return {
           content: [
             {
               type: 'text',
-              text: `Error calling API: ${error.message}`,
+              text: errorDetails,
             },
           ],
         };

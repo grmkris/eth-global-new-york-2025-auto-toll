@@ -1,14 +1,9 @@
 import type { Endpoint } from '../db/schema'
 
 // Helper to inject auth into request
-export async function injectAuth(url: string, options: any, endpoint: Endpoint) {
-  const targetUrl = new URL(endpoint.targetUrl)
-  const requestUrl = new URL(url)
-  
-  // Merge query parameters
-  requestUrl.searchParams.forEach((value, key) => {
-    targetUrl.searchParams.set(key, value)
-  })
+export async function injectAuth(url: string, options: RequestInit, endpoint: Endpoint) {
+  const targetUrl = new URL(url)
+  const headers = options.headers as Headers || new Headers()
 
   // Inject auth based on type
   switch (endpoint.authType) {
@@ -19,18 +14,12 @@ export async function injectAuth(url: string, options: any, endpoint: Endpoint) 
       break
     case 'header':
       if (endpoint.authKey && endpoint.authValue) {
-        options.headers = {
-          ...options.headers,
-          [endpoint.authKey]: endpoint.authValue
-        }
+        headers.set(endpoint.authKey, endpoint.authValue)
       }
       break
     case 'bearer':
       if (endpoint.authValue) {
-        options.headers = {
-          ...options.headers,
-          'Authorization': `Bearer ${endpoint.authValue}`
-        }
+        headers.set('Authorization', `Bearer ${endpoint.authValue}`)
       }
       break
     case 'none':
@@ -38,5 +27,11 @@ export async function injectAuth(url: string, options: any, endpoint: Endpoint) 
       break
   }
 
-  return { targetUrl: targetUrl.toString(), options }
+  return { 
+    targetUrl: targetUrl.toString(), 
+    options: {
+      ...options,
+      headers
+    }
+  }
 }
