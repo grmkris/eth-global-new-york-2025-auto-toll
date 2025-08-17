@@ -30,11 +30,28 @@ async function seedEndpoints() {
       authValue: null,
       requiresPayment: true,
       price: '$0.0011',
-      walletAddress: '0x81d786b35f3EA2F39Aa17cb18d9772E4EcD97206', // Free API, no wallet needed
+      walletAddress: '0x81d786b35f3EA2F39Aa17cb18d9772E4EcD97206',
       createdAt: new Date(),
       metadata: {
-        example: 'https://api.chucknorris.io/jokes/random',
-      },
+        description: 'Get a random Chuck Norris joke',
+        usage: {
+          method: 'GET',
+          path: '', // No additional path needed, targetUrl is complete
+          response: {
+            format: 'json',
+            example: {
+              icon_url: 'https://api.chucknorris.io/img/avatar/chuck-norris.png',
+              id: 'random_id',
+              url: 'https://api.chucknorris.io/jokes/random_id',
+              value: 'Chuck Norris can divide by zero.',
+            },
+          },
+        },
+        aiExample: {
+          description: 'To get a Chuck Norris joke, make a GET request',
+          mcp: 'mcp__x402-marketplace__call_api with apiId and method="GET"',
+        },
+      } as const,
     },
     {
       id: nanoid(10),
@@ -46,66 +63,106 @@ async function seedEndpoints() {
       requiresPayment: true,
       createdAt: new Date(),
       price: '$0.0012',
-      walletAddress: '0x81d786b35f3EA2F39Aa17cb18d9772E4EcD97206', // Example wallet 1
+      walletAddress: '0x81d786b35f3EA2F39Aa17cb18d9772E4EcD97206',
       metadata: {
-        example: 'https://catfact.ninja/fact',
-      },
+        description: 'Get a random fact about cats',
+        usage: {
+          method: 'GET',
+          path: '', // No additional path needed
+          response: {
+            format: 'json',
+            example: {
+              fact: 'Cats have 32 muscles in each ear.',
+              length: 34,
+            },
+          },
+        },
+        aiExample: {
+          description: 'To get a cat fact, make a GET request',
+          mcp: 'mcp__x402-marketplace__call_api with apiId and method="GET"',
+        },
+      } as const,
     },
     // ElevenLabs TTS Endpoints - Different voices
     {
       id: nanoid(10),
-      name: 'ElevenLabs TTS ',
-      targetUrl: 'https://api.elevenlabs.io/v1/text-to-speech',
+      name: 'ElevenLabs TTS',
+      targetUrl: 'https://api.elevenlabs.io/v1', // Base URL
       authType: 'header',
       authKey: 'xi-api-key',
       authValue: elevenLabsKey,
-      requiresPayment: true, // Free for testing
+      requiresPayment: true,
       createdAt: new Date(),
       price: '$0.014',
       walletAddress: '0x81d786b35f3EA2F39Aa17cb18d9772E4EcD97206',
       metadata: {
+        description: 'Convert text to speech with various voices',
         voices: [
-          {
-            id: 'NOpBlnGInO9m6vDvFkFC',
-            name: 'Grandpa spuds',
-          },
-          {
-            id: '21m00Tcm4TlvDq8ikWAM',
-            name: 'Rachel',
-          },
-          {
-            id: 'nPczCjzI2devNBz1zQrb',
-            name: 'Brian',
-          },
+          { id: 'NOpBlnGInO9m6vDvFkFC', name: 'Grandpa spuds' },
+          { id: '21m00Tcm4TlvDq8ikWAM', name: 'Rachel' },
+          { id: 'nPczCjzI2devNBz1zQrb', name: 'Brian' },
+          { id: 'JBFqnCBsd6RMkjVDRZzb', name: 'Default Voice' },
         ],
-        exampleCurl: `curl -X POST "https://api.elevenlabs.io/v1/text-to-speech/JBFqnCBsd6RMkjVDRZzb?output_format=mp3_44100_128" \
-     -H "xi-api-key: xi-api-key" \
-     -H "Content-Type: application/json" \
-     -d '{
-  "text": "The first move is what sets everything in motion.",
-  "model_id": "eleven_multilingual_v2"
-}'`,
+        usage: {
+          method: 'POST',
+          path: '/text-to-speech/{voice_id}', // Append to base URL
+          queryParams: {
+            output_format: 'mp3_44100_128', // Options: mp3_44100_128, mp3_22050_32, etc.
+          },
+          body: {
+            text: 'Your text to convert to speech',
+            model_id: 'eleven_multilingual_v2', // or eleven_monolingual_v1
+          },
+          response: {
+            format: 'audio/mpeg',
+            description: 'Returns MP3 audio binary data',
+          },
+        },
+        aiExample: {
+          description: 'To generate speech, use POST with voice ID in path',
+          mcp: 'mcp__x402-marketplace__call_api with apiId, method="POST", path="/text-to-speech/21m00Tcm4TlvDq8ikWAM", params={"output_format": "mp3_44100_128"}, body={"text": "Hello world", "model_id": "eleven_multilingual_v2"}',
+        },
       } as const,
-      // ElevenLab Sound Effects
     },
     {
       id: nanoid(10),
       name: 'ElevenLabs Sound Effects',
-      targetUrl: 'https://api.elevenlabs.io/v1/sound-effects',
+      targetUrl: 'https://api.elevenlabs.io/v1', // Base URL - path will be appended
       authType: 'header',
       authKey: 'xi-api-key',
       authValue: elevenLabsKey,
-      requiresPayment: true, // Free for testing
+      requiresPayment: true,
       createdAt: new Date(),
       price: '$0.015',
       walletAddress: '0x81d786b35f3EA2F39Aa17cb18d9772E4EcD97206',
       metadata: {
-        exampleCurl: `curl -X POST https://api.elevenlabs.io/v1/sound-generation \
-     -H "xi-api-key: xi-api-key" \
-     -H "Content-Type: application/json" \
-     -d '{
-  "text": "Spacious braam suitable for high-impact movie trailer moments"
-}'`,
+        description: 'Generate sound effects from text descriptions',
+        usage: {
+          method: 'POST',
+          path: '/sound-generation', // This path is appended to the base URL
+          queryParams: {
+            output_format: 'mp3_44100_128', // Optional: mp3_44100_128, mp3_22050_32, etc.
+          },
+          body: {
+            text: 'Description of the sound effect you want',
+            duration_seconds: null, // Optional: 0.5 to 22 seconds, null for auto
+            prompt_influence: 0.3, // Optional: 0 to 1, higher = more prompt adherence
+          },
+          response: {
+            format: 'audio/mpeg',
+            description: 'Returns MP3 audio binary data of the generated sound effect',
+          },
+        },
+        examples: [
+          { text: 'Laser gun blast with echo, sci-fi weapon' },
+          { text: 'Thunder rumble with rain, distant storm' },
+          { text: 'Spacious braam suitable for high-impact movie trailer moments' },
+          { text: 'Magical spell casting sound with sparkles' },
+        ],
+        aiExample: {
+          description: 'To generate sound effects, use POST to /sound-generation',
+          mcp: 'mcp__x402-marketplace__call_api with apiId, method="POST", path="/sound-generation", body={"text": "laser gun blast", "duration_seconds": 2.5}',
+        },
       } as const,
     },
     // Replicate AI Models
@@ -211,12 +268,30 @@ async function seedEndpoints() {
             },
           },
         },
+        aiWorkflow: {
+          description: 'Replicate uses async processing. Follow this workflow:',
+          steps: [
+            '1. Create prediction: POST to /models/{owner}/{model}/predictions',
+            '2. Get prediction ID from response',
+            '3. Poll status: GET /predictions/{prediction_id}',
+            '4. Check status field: "starting" → "processing" → "succeeded"',
+            '5. Get result from output field when status is "succeeded"',
+          ],
+          example: {
+            step1: 'mcp__x402-marketplace__call_api with apiId, method="POST", path="/models/black-forest-labs/flux-schnell/predictions", body={"input": {...}}',
+            step2: 'Extract prediction.id from response',
+            step3: 'mcp__x402-marketplace__call_api with apiId, method="GET", path="/predictions/{id}"',
+            step4: 'Check response.status, if "succeeded" get response.output[0] for image URL',
+          },
+        },
         tips: [
           'Always use the proxy path format: /paid-proxy/{endpoint_id}/{model_path}',
           'For creating predictions: POST to /models/{owner}/{model}/predictions',
           'For checking status: GET /predictions/{prediction_id}',
           'Poll status endpoint until status becomes "succeeded" or "failed"',
           'The output field will contain URLs to generated images/videos when complete',
+          'Sound generation models: meta/musicgen, riffusion/riffusion',
+          'For sound effects, consider using ElevenLabs Sound Effects API instead',
         ],
       } as const,
     },
