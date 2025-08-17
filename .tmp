@@ -1,0 +1,15 @@
+http://localhost:3000/endpoints
+
+http://localhost:3000/dashboard
+
+
+
+grt
+url:
+https://https://token-api.thegraph.com
+token: 
+eyJhbGciOiJLTVNFUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3OTE0Mjc2MjQsImp0aSI6ImIwY2ZkZWJjLWYzMGItNDRjZC05Yjc2LTk2OTQ2MzEyZDEzYSIsImlhdCI6MTc1NTQyNzYyNCwiaXNzIjoiZGZ1c2UuaW8iLCJzdWIiOiIwc3lmbzkyNDc0Y2U0YzYyYWZkZTIiLCJ2IjoxLCJha2kiOiI0NzYzMzQxMDMyMDU2MTViYmQ4M2Q4NTQ5YTY2MTMxMDUyZTk1N2E4NzFkYzBjNWI0MTNiYTA2OTkzOWM3M2NjIiwidWlkIjoiMHN5Zm85MjQ3NGNlNGM2MmFmZGUyIn0.LGl1I-ualipooDUQRkFTqeNh5qJo8TANtSs3HqeVxARP-Rh1wqlzzAHgukX-H8kjpkLEcJCMJaNBftmoRvqXJA
+
+curl --request GET \
+  --url 'https://token-api.thegraph.com/balances/evm/{address}?network_id=mainnet&limit=10&page=1' \
+  --header 'Authorization: Bearer {token}'

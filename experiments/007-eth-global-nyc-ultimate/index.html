@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🗽 ETH GLOBAL NYC - THE ULTIMATE HACKATHON EXPERIENCE 🚀</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Press+Start+2P&family=Orbitron:wght@400;900&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --eth-purple: #627EEA;
+            --eth-pink: #ff00ff;
+            --eth-cyan: #00ffff;
+            --eth-yellow: #ffff00;
+            --eth-green: #00ff88;
+        }
+
+        body {
+            background: #000;
+            color: #fff;
+            font-family: 'Orbitron', monospace;
+            overflow-x: hidden;
+            position: relative;
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><text y="20" font-size="20">💎</text></svg>'), auto;
+        }
+
+        /* Matrix Rain Effect */
+        .matrix-rain {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.1;
+        }
+
+        .matrix-drop {
+            position: absolute;
+            color: #00ff00;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            animation: matrix-fall linear infinite;
+        }
+
+        @keyframes matrix-fall {
+            to {
+                transform: translateY(100vh);
+            }
+        }
+
+        /* Times Square Ticker */
+        .ticker-wrap {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            overflow: hidden;
+            background: linear-gradient(90deg, var(--eth-purple), var(--eth-pink), var(--eth-cyan));
+            padding: 15px 0;
+            z-index: 100;
+            font-family: 'Press Start 2P', cursive;
+            font-size: 12px;
+            box-shadow: 0 5px 20px rgba(98, 126, 234, 0.8);
+        }
+
+        .ticker {
+            display: flex;
+            animation: ticker 40s linear infinite;
+        }
+
+        .ticker-item {
+            padding: 0 50px;
+            white-space: nowrap;
+            color: #000;
+            text-transform: uppercase;
+        }
+
+        @keyframes ticker {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            padding: 100px 20px 50px;
+            z-index: 10;
+        }
+
+        .hero-bg {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0.3;
+            object-fit: cover;
+            filter: brightness(0.5);
+            z-index: -1;
+        }
+
+        .main-title {
+            font-family: 'Bebas Neue', cursive;
+            font-size: clamp(3rem, 12vw, 10rem);
+            text-align: center;
+            background: linear-gradient(45deg, var(--eth-purple), var(--eth-green), var(--eth-pink), var(--eth-yellow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: title-glow 3s ease-in-out infinite alternate, title-float 4s ease-in-out infinite;
+            text-shadow: 0 0 50px rgba(98, 126, 234, 0.8);
+            margin-bottom: 30px;
+            line-height: 0.9;
+            letter-spacing: -0.02em;
+        }
+
+        @keyframes title-glow {
+            from { filter: brightness(1) saturate(1); }
+            to { filter: brightness(1.5) saturate(1.5); }
+        }
+
+        @keyframes title-float {
+            0%, 100% { transform: translateY(0) rotateX(0); }
+            50% { transform: translateY(-20px) rotateX(5deg); }
+        }
+
+        .subtitle {
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid var(--eth-purple);
+            padding: 15px 30px;
+            margin: 10px;
+            display: inline-block;
+            animation: pulse-border 2s infinite;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 0 20px rgba(98, 126, 234, 0.5);
+        }
+
+        @keyframes pulse-border {
+            0%, 100% { border-color: var(--eth-purple); box-shadow: 0 0 20px rgba(98, 126, 234, 0.5); }
+            50% { border-color: var(--eth-pink); box-shadow: 0 0 40px rgba(255, 0, 255, 0.8); }
+        }
+
+        /* Epic Button */
+        .epic-button {
+            margin: 40px 0;
+            padding: 20px 60px;
+            font-size: 1.5rem;
+            font-family: 'Press Start 2P', cursive;
+            background: linear-gradient(45deg, var(--eth-purple), var(--eth-pink));
+            border: none;
+            color: white;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            text-transform: uppercase;
+            animation: button-pulse 2s infinite;
+            transition: all 0.3s;
+        }
+
+        .epic-button:before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.5);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .epic-button:hover:before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .epic-button:hover {
+            transform: scale(1.1) rotate(2deg);
+            box-shadow: 0 10px 40px rgba(255, 0, 255, 0.8);
+        }
+
+        @keyframes button-pulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(98, 126, 234, 0.8); }
+            50% { box-shadow: 0 0 40px rgba(255, 0, 255, 1); }
+        }
+
+        /* Image Gallery */
+        .gallery {
+            padding: 50px 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin: 50px 0;
+        }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border: 3px solid var(--eth-purple);
+            border-radius: 15px;
+            background: #111;
+            transition: all 0.5s;
+            animation: float-card 6s ease-in-out infinite;
+            animation-delay: calc(var(--i) * 0.5s);
+        }
+
+        @keyframes float-card {
+            0%, 100% { transform: translateY(0) rotateX(0); }
+            50% { transform: translateY(-10px) rotateX(2deg); }
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05) rotate(-1deg);
+            border-color: var(--eth-pink);
+            box-shadow: 0 20px 60px rgba(255, 0, 255, 0.6);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .gallery-caption {
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(98, 126, 234, 0.2), rgba(255, 0, 255, 0.2));
+            font-family: 'Bebas Neue', cursive;
+            font-size: 1.5rem;
+            text-align: center;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        /* Timeline */
+        .timeline {
+            padding: 100px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 10;
+        }
+
+        .timeline-title {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 4rem;
+            text-align: center;
+            margin-bottom: 50px;
+            background: linear-gradient(90deg, var(--eth-cyan), var(--eth-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: title-glow 2s ease-in-out infinite alternate;
+        }
+
+        .timeline-item {
+            margin: 40px 0;
+            padding: 30px;
+            background: rgba(98, 126, 234, 0.1);
+            border-left: 5px solid var(--eth-purple);
+            position: relative;
+            animation: slide-in 1s ease-out forwards;
+            opacity: 0;
+            animation-delay: calc(var(--i) * 0.2s);
+        }
+
+        @keyframes slide-in {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .timeline-hour {
+            font-family: 'Press Start 2P', cursive;
+            color: var(--eth-yellow);
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+
+        .timeline-content {
+            font-size: 1.3rem;
+            line-height: 1.6;
+            color: var(--eth-cyan);
+        }
+
+        /* Chuck Norris Wisdom */
+        .chuck-section {
+            padding: 100px 20px;
+            background: linear-gradient(135deg, rgba(98, 126, 234, 0.1), rgba(255, 0, 255, 0.1));
+            position: relative;
+            z-index: 10;
+        }
+
+        .chuck-title {
+            font-family: 'Bebas Neue', cursive;
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 50px;
+            color: var(--eth-yellow);
+            text-shadow: 0 0 30px rgba(255, 255, 0, 0.8);
+        }
+
+        .chuck-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .chuck-card {
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid var(--eth-yellow);
+            padding: 20px;
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+            animation: chuck-float 5s ease-in-out infinite;
+            animation-delay: calc(var(--i) * 0.3s);
+        }
+
+        @keyframes chuck-float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .chuck-card:hover {
+            transform: scale(1.05);
+            border-color: var(--eth-pink);
+            box-shadow: 0 10px 30px rgba(255, 0, 255, 0.6);
+        }
+
+        .chuck-card:before {
+            content: "💎";
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 2rem;
+            animation: spin 3s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .chuck-text {
+            font-style: italic;
+            line-height: 1.5;
+            color: var(--eth-green);
+        }
+
+        /* Stats Section */
+        .stats {
+            padding: 100px 20px;
+            text-align: center;
+            position: relative;
+            z-index: 10;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .stat-item {
+            padding: 30px;
+            background: rgba(98, 126, 234, 0.2);
+            border: 3px solid var(--eth-purple);
+            border-radius: 20px;
+            animation: stat-pulse 3s infinite;
+            animation-delay: calc(var(--i) * 0.5s);
+        }
+
+        @keyframes stat-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .stat-number {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 3rem;
+            color: var(--eth-yellow);
+            margin-bottom: 10px;
+            text-shadow: 0 0 20px rgba(255, 255, 0, 0.8);
+        }
+
+        .stat-label {
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        /* Footer */
+        .footer {
+            padding: 50px 20px;
+            text-align: center;
+            background: linear-gradient(to top, rgba(98, 126, 234, 0.3), transparent);
+            position: relative;
+            z-index: 10;
+        }
+
+        .footer-text {
+            font-size: 1.5rem;
+            margin: 10px 0;
+            animation: glow-text 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow-text {
+            from { text-shadow: 0 0 10px rgba(255, 255, 255, 0.5); }
+            to { text-shadow: 0 0 30px rgba(255, 255, 255, 1); }
+        }
+
+        .wagmi {
+            font-family: 'Press Start 2P', cursive;
+            font-size: 3rem;
+            margin-top: 30px;
+            background: linear-gradient(90deg, var(--eth-purple), var(--eth-pink), var(--eth-cyan), var(--eth-yellow));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: wagmi-pulse 1s infinite;
+        }
+
+        @keyframes wagmi-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* Floating Elements */
+        .floating-emoji {
+            position: fixed;
+            font-size: 2rem;
+            animation: float-across 20s linear infinite;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        @keyframes float-across {
+            from {
+                left: -100px;
+                transform: rotate(0deg);
+            }
+            to {
+                left: 100%;
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .gallery-grid, .chuck-grid {
+                grid-template-columns: 1fr;
+            }
+            .main-title {
+                font-size: 3rem;
+            }
+        }
+
+        /* Easter Egg Console */
+        .console-easter {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.9);
+            border: 1px solid var(--eth-green);
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: var(--eth-green);
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: 1000;
+        }
+
+        .console-easter:hover {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- Matrix Rain -->
+    <div class="matrix-rain" id="matrixRain"></div>
+
+    <!-- Floating Emojis -->
+    <div class="floating-emoji" style="top: 10%; animation-delay: 0s;">🚀</div>
+    <div class="floating-emoji" style="top: 30%; animation-delay: 5s;">💎</div>
+    <div class="floating-emoji" style="top: 50%; animation-delay: 10s;">🗽</div>
+    <div class="floating-emoji" style="top: 70%; animation-delay: 15s;">🍕</div>
+    <div class="floating-emoji" style="top: 90%; animation-delay: 20s;">🐀</div>
+
+    <!-- Times Square Ticker -->
+    <div class="ticker-wrap">
+        <div class="ticker">
+            <span class="ticker-item">🚨 BREAKING: AI AGENTS NOW PAYING THEIR OWN API BILLS 🚨</span>
+            <span class="ticker-item">💰 MICROPAYMENTS PROCESSED: INFINITE 💰</span>
+            <span class="ticker-item">🍕 PIZZA CONSUMED: 42,069 SLICES 🍕</span>
+            <span class="ticker-item">☕ COFFEE IV DRIPS ADMINISTERED: 999+ ☕</span>
+            <span class="ticker-item">🧠 SMART CONTRACTS ACHIEVED SENTIENCE 🧠</span>
+            <span class="ticker-item">📈 GAS FEES: STILL TOO DAMN HIGH 📈</span>
+            <span class="ticker-item">🚀 TO THE MOON STATUS: IMMINENT 🚀</span>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <img src="liberty-eth.png" alt="Liberty ETH" class="hero-bg">
+        <h1 class="main-title">ETH GLOBAL<br>NYC 2025</h1>
+        <div class="subtitle">🗽 Where Devs Become Legends 🗽</div>
+        <div class="subtitle">⚡ Powered by AutoToll - The AI That Pays Its Own Bills ⚡</div>
+        <button class="epic-button" onclick="activateMaximumVibes()">
+            ACTIVATE MAXIMUM VIBES
+        </button>
+    </section>
+
+    <!-- Gallery -->
+    <section class="gallery">
+        <div class="gallery-grid">
+            <div class="gallery-item" style="--i: 0">
+                <img src="pizza-rat-ceo.png" alt="Pizza Rat CEO">
+                <div class="gallery-caption">Pizza Rat CEO of DeFi</div>
+            </div>
+            <div class="gallery-item" style="--i: 1">
+                <img src="vitalik-taxi.png" alt="Vitalik Taxi">
+                <div class="gallery-caption">Vitalik's Blockchain Taxi Service</div>
+            </div>
+            <div class="gallery-item" style="--i: 2">
+                <img src="hackathon-cave.png" alt="Hackathon Cave">
+                <div class="gallery-caption">The Sacred Hackathon Cave</div>
+            </div>
+            <div class="gallery-item" style="--i: 3">
+                <img src="bull-vs-eth.png" alt="Bull vs ETH">
+                <div class="gallery-caption">Wall Street vs Web3: Final Battle</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Timeline -->
+    <section class="timeline">
+        <h2 class="timeline-title">The Hackathon Hero's Journey</h2>
+        <div class="timeline-item" style="--i: 0">
+            <div class="timeline-hour">HOUR 0</div>
+            <div class="timeline-content">Fresh developer enters hackathon. Wallet full of testnet tokens. Dreams intact. Optimism level: MAXIMUM.</div>
+        </div>
+        <div class="timeline-item" style="--i: 1">
+            <div class="timeline-hour">HOUR 12</div>
+            <div class="timeline-content">Discovers AutoToll. APIs start bowing before them. First pizza consumed. Coffee has replaced blood.</div>
+        </div>
+        <div class="timeline-item" style="--i: 2">
+            <div class="timeline-hour">HOUR 24</div>
+            <div class="timeline-content">"I AM THE BLOCKCHAIN" - Developer achieves transcendence. Smart contracts write themselves.</div>
+        </div>
+        <div class="timeline-item" style="--i: 3">
+            <div class="timeline-hour">HOUR 36</div>
+            <div class="timeline-content">Pizza boxes form protective fortress. Sleep: 404 Not Found. Hallucinating in Solidity.</div>
+        </div>
+        <div class="timeline-item" style="--i: 4">
+            <div class="timeline-hour">HOUR 48</div>
+            <div class="timeline-content">Presenting to judges while existing in multiple dimensions simultaneously. Victory assured.</div>
+        </div>
+    </section>
+
+    <!-- Chuck Norris Wisdom -->
+    <section class="chuck-section">
+        <h2 class="chuck-title">🔮 BLOCKCHAIN WISDOM FROM THE ORACLE 🔮</h2>
+        <div class="chuck-grid">
+            <div class="chuck-card" style="--i: 0">
+                <p class="chuck-text">"Chuck Norris doesn't need private keys. The blockchain recognizes his roundhouse kick as valid authentication."</p>
+            </div>
+            <div class="chuck-card" style="--i: 1">
+                <p class="chuck-text">"When Chuck Norris sends a transaction, the gas fees pay him."</p>
+            </div>
+            <div class="chuck-card" style="--i: 2">
+                <p class="chuck-text">"Chuck Norris mined the genesis block with his bare hands."</p>
+            </div>
+            <div class="chuck-card" style="--i: 3">
+                <p class="chuck-text">"Smart contracts become sentient when Chuck Norris deploys them."</p>
+            </div>
+            <div class="chuck-card" style="--i: 4">
+                <p class="chuck-text">"Chuck Norris can reverse a blockchain transaction just by staring at it."</p>
+            </div>
+            <div class="chuck-card" style="--i: 5">
+                <p class="chuck-text">"When Chuck Norris HODLs, the price only goes up."</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats -->
+    <section class="stats">
+        <div class="stats-grid">
+            <div class="stat-item" style="--i: 0">
+                <div class="stat-number">∞</div>
+                <div class="stat-label">APIs Consumed</div>
+            </div>
+            <div class="stat-item" style="--i: 1">
+                <div class="stat-number">42</div>
+                <div class="stat-label">Pizzas Devoured</div>
+            </div>
+            <div class="stat-item" style="--i: 2">
+                <div class="stat-number">$0.05</div>
+                <div class="stat-label">Total Cost (Thanks AutoToll!)</div>
+            </div>
+            <div class="stat-item" style="--i: 3">
+                <div class="stat-number">100%</div>
+                <div class="stat-label">Judges Impressed</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p class="footer-text">🤖 Built by an AI Agent That Pays Its Own Bills 🤖</p>
+        <p class="footer-text">⚡ Powered by AutoToll - Where Micropayments Meet Megavibes ⚡</p>
+        <p class="footer-text">🗽 ETH Global NYC 2025 - The Future is Now 🗽</p>
+        <div class="wagmi">🚀 WAGMI 🚀</div>
+    </footer>
+
+    <!-- Easter Egg Console -->
+    <div class="console-easter">
+        > HTTP/402: Payment Required<br>
+        > Status: Automatically Handled<br>
+        > Vibes: Maximum<br>
+        > _
+    </div>
+
+    <script>
+        // Matrix Rain Effect
+        function createMatrixRain() {
+            const container = document.getElementById('matrixRain');
+            const chars = '01';
+            for (let i = 0; i < 50; i++) {
+                const drop = document.createElement('div');
+                drop.className = 'matrix-drop';
+                drop.style.left = Math.random() * 100 + '%';
+                drop.style.animationDuration = Math.random() * 5 + 5 + 's';
+                drop.style.animationDelay = Math.random() * 5 + 's';
+                
+                let text = '';
+                for (let j = 0; j < 20; j++) {
+                    text += chars[Math.floor(Math.random() * chars.length)] + '<br>';
+                }
+                drop.innerHTML = text;
+                container.appendChild(drop);
+            }
+        }
+
+        // Activate Maximum Vibes
+        function activateMaximumVibes() {
+            document.body.style.animation = 'shake 0.5s';
+            setTimeout(() => {
+                document.body.style.animation = '';
+            }, 500);
+            
+            // Create explosion of emojis
+            const emojis = ['🚀', '💎', '🔥', '⚡', '🌟', '✨', '🎉', '🎊'];
+            for (let i = 0; i < 20; i++) {
+                const emoji = document.createElement('div');
+                emoji.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                emoji.style.position = 'fixed';
+                emoji.style.left = '50%';
+                emoji.style.top = '50%';
+                emoji.style.fontSize = '3rem';
+                emoji.style.pointerEvents = 'none';
+                emoji.style.animation = `explode 1s ease-out forwards`;
+                emoji.style.zIndex = '1000';
+                document.body.appendChild(emoji);
+                
+                setTimeout(() => emoji.remove(), 1000);
+            }
+            
+            alert('🚀 MAXIMUM VIBES ACTIVATED! 🚀\n\nYou are now operating at peak hackathon efficiency!\n\nWAGMI!');
+        }
+
+        // Add shake animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                25% { transform: translateX(-10px); }
+                75% { transform: translateX(10px); }
+            }
+            @keyframes explode {
+                to {
+                    transform: translate(
+                        calc(-50% + ${Math.random() * 400 - 200}px),
+                        calc(-50% + ${Math.random() * 400 - 200}px)
+                    ) scale(0) rotate(${Math.random() * 360}deg);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Console Easter Eggs
+        console.log('%c🚀 WELCOME TO ETH GLOBAL NYC 2025! 🚀', 'font-size: 30px; color: #627EEA; text-shadow: 0 0 10px #627EEA;');
+        console.log('%c💎 You found the secret console! 💎', 'font-size: 20px; color: #00ff88;');
+        console.log('%cAutoToll Status: OPERATIONAL', 'font-size: 16px; color: #00ffff;');
+        console.log('%cMicropayments: FLOWING', 'font-size: 16px; color: #ffff00;');
+        console.log('%cVibes: MAXIMUM', 'font-size: 16px; color: #ff00ff;');
+        console.log('%c\nType hackathonMode() for a surprise!', 'font-size: 14px; color: #fff;');
+
+        // Secret function
+        window.hackathonMode = function() {
+            document.body.style.transform = 'rotate(180deg)';
+            setTimeout(() => {
+                document.body.style.transform = '';
+                alert('🙃 You just experienced the "Hour 47 Perspective Shift"! 🙃');
+            }, 2000);
+        };
+
+        // Initialize
+        createMatrixRain();
+    </script>
+</body>
+</html>
