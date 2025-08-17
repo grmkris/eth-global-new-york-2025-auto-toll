@@ -7,7 +7,7 @@
     "start": "bun ./src/index.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "bun ./scripts/migrate.ts",
-    "db:studio": "drizzle-kit studio",
+    "db:studio": "bun --bun drizzle-kit studio",
     "setup": "bun db:generate && bun db:migrate && bun ./src/scripts/seed-endpoints.ts"
   },
   "dependencies": {
@@ -19,7 +19,8 @@
     "zod": "latest"
   },
   "devDependencies": {
+    "@types/bun": "latest",
     "drizzle-kit": "latest",
-    "@types/bun": "latest"
+    "postgres": "^3.4.7"
   }
 }

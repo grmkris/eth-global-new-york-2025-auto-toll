@@ -41,37 +41,7 @@ Every experiment includes an `experiment-log.md` with:
 - Generated asset details
 - Key learnings
 
-### 4. **Available APIs**
-
-#### Free APIs
-- **ElevenLabs TTS - Rachel** (`elevenlabs-rachel`) - Voice generation
-- **Chuck Norris Jokes** (`IvpCdnikHc`) - Random jokes
-- **JSONPlaceholder Posts** (`CWzt_0KGqz`) - Mock API data
-
-#### Paid APIs (with x402 micropayments)
-- **Replicate FLUX** (`replicate-flux-schnell`) - $0.003 - Image generation
-- **Replicate SDXL** (`replicate-sdxl`) - $0.003 - Stable Diffusion
-- **ElevenLabs TTS (Premium voices)** - $0.002 - Josh, Bella, Adam
-- **Replicate Whisper** (`replicate-whisper`) - $0.002 - Audio transcription
-- **Replicate LLaMA 3** (`replicate-llama-3`) - $0.005 - LLM text generation
-- **Replicate Base API** (`BAWqc3ehGM`) - $0.001 - General Replicate access
-
-### 5. **Replicate API Pattern**
-Replicate uses async processing:
-1. **Create prediction**: POST to `/predictions` → returns ID
-2. **Poll for result**: GET `/predictions/{id}` → check status
-3. **Get output**: When status="succeeded", extract output URL
-
-Use the base Replicate API (`BAWqc3ehGM`) for polling support:
-```javascript
-// Create prediction
-POST /paid-proxy/BAWqc3ehGM/predictions
-
-// Poll for completion
-GET /paid-proxy/BAWqc3ehGM/predictions/{id}
-```
-
-### 6. **File Storage**
+### 4. **File Storage**
 - Generated files are saved to: `/Users/kristjangrm/Downloads/autotoll/`
 - Copy files to experiment directory for persistence
 - Binary files (images, audio) are automatically downloaded
@@ -84,18 +54,6 @@ GET /paid-proxy/BAWqc3ehGM/predictions/{id}
 3. Create main file (HTML, script, etc.)
 4. Document in `experiment-log.md`
 
-### Experiment Log Template
-```markdown
-# Experiment XXX: [Title]
-
-## Overview
-[Brief description]
-
-## MCP API Usage Log
-| Tool | API ID | Cost | Transaction Hash | Timestamp | Status |
-|------|--------|------|-----------------|-----------|---------|
-| ... | ... | ... | ... | ... | ✅/❌ |
-
 ## Generated Assets
 - **Asset 1**: [Description, URL, size]
 - **Asset 2**: [Description, URL, size]
@@ -104,6 +62,7 @@ GET /paid-proxy/BAWqc3ehGM/predictions/{id}
 | Category | Amount |
 |----------|--------|
 | Total | $X.XXX |
+
 
 ## Key Learnings
 - [Learning 1]

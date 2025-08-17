@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Game Studio - Ethereum Runner NYC</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: white;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        /* Header */
+        .header {
+            background: rgba(0,0,0,0.5);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid #00ffff;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, #00ffff, #ff00ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .tagline {
+            color: #00ffff;
+            font-size: 1.2rem;
+        }
+
+        /* Studio Interface */
+        .studio-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .studio-screen {
+            width: 90%;
+            max-width: 1200px;
+            background: rgba(0,0,0,0.8);
+            border: 3px solid #00ffff;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 50px rgba(0,255,255,0.5);
+        }
+
+        /* Generation Steps */
+        .generation-steps {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .step {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 5px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .step.active {
+            background: rgba(0,255,255,0.2);
+            border: 1px solid #00ffff;
+            transform: scale(1.05);
+        }
+
+        .step.complete {
+            background: rgba(0,255,0,0.2);
+            border: 1px solid #00ff00;
+        }
+
+        .step-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+
+        .step-title {
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+
+        .step-status {
+            font-size: 0.8rem;
+            color: #888;
+        }
+
+        /* Timer */
+        .timer {
+            text-align: center;
+            font-size: 3rem;
+            color: #00ffff;
+            margin: 20px 0;
+            font-weight: bold;
+            text-shadow: 0 0 20px rgba(0,255,255,0.5);
+        }
+
+        /* Game Container */
+        .game-container {
+            background: black;
+            border: 2px solid #ff00ff;
+            border-radius: 5px;
+            position: relative;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+
+        #gameCanvas {
+            display: block;
+            image-rendering: pixelated;
+            image-rendering: crisp-edges;
+        }
+
+        /* Control Panel */
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #00ffff, #ff00ff);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(255,0,255,0.5);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Stats Display */
+        .stats {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.8);
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #00ffff;
+        }
+
+        .stat-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 5px 0;
+            min-width: 200px;
+        }
+
+        .stat-label {
+            color: #888;
+        }
+
+        .stat-value {
+            color: #00ffff;
+            font-weight: bold;
+        }
+
+        /* Cost Tracker */
+        .cost-tracker {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.9);
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #00ff00;
+        }
+
+        .cost-title {
+            color: #00ff00;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .cost-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 5px 0;
+            font-size: 0.9rem;
+        }
+
+        .total-cost {
+            border-top: 1px solid #00ff00;
+            margin-top: 10px;
+            padding-top: 10px;
+            font-weight: bold;
+            color: #00ff00;
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(0,255,255,0.3);
+            border-top: 3px solid #00ffff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Game Over Screen */
+        .game-over {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0,0,0,0.95);
+            padding: 30px;
+            border-radius: 10px;
+            border: 2px solid #ff00ff;
+            text-align: center;
+            z-index: 1000;
+        }
+
+        .game-over.active {
+            display: block;
+        }
+
+        .game-over h2 {
+            color: #ff00ff;
+            margin-bottom: 20px;
+        }
+
+        .final-score {
+            font-size: 2rem;
+            color: #00ffff;
+            margin-bottom: 20px;
+        }
+
+        /* Instructions */
+        .instructions {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0,0,0,0.8);
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ff00ff;
+        }
+
+        .instructions h3 {
+            color: #ff00ff;
+            margin-bottom: 10px;
+        }
+
+        .instructions p {
+            margin: 5px 0;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>AI INSTANT GAME STUDIO</h1>
+        <div class="tagline">Powered by AutoToll - From Idea to Game in 60 Seconds!</div>
+    </div>
+
+    <div class="studio-container">
+        <div class="studio-screen">
+            <!-- Generation Steps -->
+            <div class="generation-steps">
+                <div class="step complete" id="step1">
+                    <div class="step-icon">🎨</div>
+                    <div class="step-title">Generate Sprites</div>
+                    <div class="step-status">✓ Complete</div>
+                </div>
+                <div class="step complete" id="step2">
+                    <div class="step-icon">🎵</div>
+                    <div class="step-title">Create Audio</div>
+                    <div class="step-status">✓ Complete</div>
+                </div>
+                <div class="step complete" id="step3">
+                    <div class="step-icon">💻</div>
+                    <div class="step-title">Write Code</div>
+                    <div class="step-status">✓ Complete</div>
+                </div>
+                <div class="step complete" id="step4">
+                    <div class="step-icon">🎮</div>
+                    <div class="step-title">Build Game</div>
+                    <div class="step-status">✓ Ready!</div>
+                </div>
+            </div>
+
+            <!-- Timer -->
+            <div class="timer" id="timer">00:00</div>
+
+            <!-- Game Container -->
+            <div class="game-container">
+                <canvas id="gameCanvas" width="800" height="400"></canvas>
+                
+                <!-- Loading -->
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <div>Generating your game...</div>
+                </div>
+
+                <!-- Game Over Screen -->
+                <div class="game-over" id="gameOver">
+                    <h2>GAME OVER!</h2>
+                    <div class="final-score">Score: <span id="finalScore">0</span></div>
+                    <button class="btn" onclick="restartGame()">Play Again</button>
+                </div>
+            </div>
+
+            <!-- Controls -->
+            <div class="controls">
+                <button class="btn" id="generateBtn" onclick="startGeneration()">🚀 Generate Game</button>
+                <button class="btn" id="playBtn" onclick="startGame()" disabled>▶️ Play Game</button>
+                <audio id="gameAudio" src="game-intro.mp3"></audio>
+            </div>
+        </div>
+
+        <!-- Stats Display -->
+        <div class="stats">
+            <div class="stat-item">
+                <span class="stat-label">Score:</span>
+                <span class="stat-value" id="score">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">High Score:</span>
+                <span class="stat-value" id="highScore">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Coins:</span>
+                <span class="stat-value" id="coins">0</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Lives:</span>
+                <span class="stat-value" id="lives">3</span>
+            </div>
+        </div>
+
+        <!-- Cost Tracker -->
+        <div class="cost-tracker">
+            <div class="cost-title">AI Generation Costs</div>
+            <div class="cost-item">
+                <span>Sprites (4x FLUX):</span>
+                <span>$0.012</span>
+            </div>
+            <div class="cost-item">
+                <span>Audio (ElevenLabs):</span>
+                <span>$0.001</span>
+            </div>
+            <div class="cost-item">
+                <span>Game Logic (AI):</span>
+                <span>$0.000</span>
+            </div>
+            <div class="total-cost">
+                <span>Total Cost:</span>
+                <span>$0.013</span>
+            </div>
+        </div>
+
+        <!-- Instructions -->
+        <div class="instructions">
+            <h3>How to Play</h3>
+            <p>⬆️ Arrow Up - Jump</p>
+            <p>⬇️ Arrow Down - Slide</p>
+            <p>💰 Collect USDC coins</p>
+            <p>🐂 Avoid Wall Street Bulls!</p>
+        </div>
+    </div>
+
+    <script>
+        // Game variables
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        ctx.imageSmoothingEnabled = false;
+
+        let gameRunning = false;
+        let score = 0;
+        let highScore = localStorage.getItem('ethRunnerHighScore') || 0;
+        let coins = 0;
+        let lives = 3;
+        let gameSpeed = 5;
+
+        // Load images
+        const images = {
+            player: new Image(),
+            background: new Image(),
+            coin: new Image(),
+            bull: new Image()
+        };
+
+        images.player.src = 'eth-player.png';
+        images.background.src = 'nyc-background.png';
+        images.coin.src = 'crypto-coins.png';
+        images.bull.src = 'wall-street-bull.png';
+
+        // Player object
+        const player = {
+            x: 100,
+            y: 300,
+            width: 64,
+            height: 64,
+            velY: 0,
+            jumping: false,
+            sliding: false
+        };
+
+        // Game objects arrays
+        let obstacles = [];
+        let collectibles = [];
+        let backgroundX = 0;
+
+        // Timer
+        let startTime;
+        let timerInterval;
+
+        function startTimer() {
+            startTime = Date.now();
+            timerInterval = setInterval(() => {
+                const elapsed = Math.floor((Date.now() - startTime) / 1000);
+                const minutes = Math.floor(elapsed / 60).toString().padStart(2, '0');
+                const seconds = (elapsed % 60).toString().padStart(2, '0');
+                document.getElementById('timer').textContent = `${minutes}:${seconds}`;
+            }, 100);
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+        }
+
+        // Generation animation
+        function startGeneration() {
+            document.getElementById('generateBtn').disabled = true;
+            document.getElementById('loading').classList.add('active');
+            
+            startTimer();
+            
+            // Simulate generation steps
+            setTimeout(() => {
+                document.getElementById('step1').classList.add('active');
+            }, 100);
+            
+            setTimeout(() => {
+                document.getElementById('step1').classList.remove('active');
+                document.getElementById('step1').classList.add('complete');
+                document.getElementById('step2').classList.add('active');
+            }, 500);
+            
+            setTimeout(() => {
+                document.getElementById('step2').classList.remove('active');
+                document.getElementById('step2').classList.add('complete');
+                document.getElementById('step3').classList.add('active');
+            }, 1000);
+            
+            setTimeout(() => {
+                document.getElementById('step3').classList.remove('active');
+                document.getElementById('step3').classList.add('complete');
+                document.getElementById('step4').classList.add('active');
+            }, 1500);
+            
+            setTimeout(() => {
+                document.getElementById('step4').classList.remove('active');
+                document.getElementById('step4').classList.add('complete');
+                document.getElementById('loading').classList.remove('active');
+                document.getElementById('playBtn').disabled = false;
+                stopTimer();
+                
+                // Play intro audio
+                document.getElementById('gameAudio').play();
+                
+                // Auto-start game
+                setTimeout(startGame, 2000);
+            }, 2000);
+        }
+
+        // Game functions
+        function startGame() {
+            gameRunning = true;
+            score = 0;
+            coins = 0;
+            lives = 3;
+            gameSpeed = 5;
+            obstacles = [];
+            collectibles = [];
+            player.y = 300;
+            player.velY = 0;
+            
+            document.getElementById('gameOver').classList.remove('active');
+            updateStats();
+            gameLoop();
+        }
+
+        function gameLoop() {
+            if (!gameRunning) return;
+
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw scrolling background
+            backgroundX -= gameSpeed / 2;
+            if (backgroundX <= -canvas.width) {
+                backgroundX = 0;
+            }
+            
+            if (images.background.complete) {
+                ctx.drawImage(images.background, backgroundX, 0, canvas.width, canvas.height);
+                ctx.drawImage(images.background, backgroundX + canvas.width, 0, canvas.width, canvas.height);
+            } else {
+                // Fallback gradient
+                const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
+                gradient.addColorStop(0, '#0a0a2e');
+                gradient.addColorStop(1, '#16213e');
+                ctx.fillStyle = gradient;
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+            }
+
+            // Update and draw player
+            updatePlayer();
+            drawPlayer();
+
+            // Update and draw obstacles
+            updateObstacles();
+            
+            // Update and draw collectibles
+            updateCollectibles();
+
+            // Spawn new objects
+            if (Math.random() < 0.02) {
+                spawnObstacle();
+            }
+            if (Math.random() < 0.03) {
+                spawnCollectible();
+            }
+
+            // Increase difficulty
+            if (score % 100 === 0 && score > 0) {
+                gameSpeed += 0.5;
+            }
+
+            // Update score
+            score++;
+            updateStats();
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        function updatePlayer() {
+            // Gravity
+            if (player.jumping) {
+                player.velY += 0.8;
+                player.y += player.velY;
+                
+                if (player.y >= 300) {
+                    player.y = 300;
+                    player.jumping = false;
+                    player.velY = 0;
+                }
+            }
+
+            // Sliding
+            if (player.sliding) {
+                player.height = 32;
+            } else {
+                player.height = 64;
+            }
+        }
+
+        function drawPlayer() {
+            if (images.player.complete) {
+                ctx.drawImage(images.player, player.x, player.y, player.width, player.height);
+            } else {
+                // Fallback rectangle
+                ctx.fillStyle = '#627eea';
+                ctx.fillRect(player.x, player.y, player.width, player.height);
+            }
+        }
+
+        function spawnObstacle() {
+            obstacles.push({
+                x: canvas.width,
+                y: 320,
+                width: 48,
+                height: 48
+            });
+        }
+
+        function spawnCollectible() {
+            collectibles.push({
+                x: canvas.width,
+                y: 250 + Math.random() * 100,
+                width: 32,
+                height: 32
+            });
+        }
+
+        function updateObstacles() {
+            for (let i = obstacles.length - 1; i >= 0; i--) {
+                const obstacle = obstacles[i];
+                obstacle.x -= gameSpeed;
+
+                // Draw obstacle
+                if (images.bull.complete) {
+                    ctx.drawImage(images.bull, obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+                } else {
+                    ctx.fillStyle = '#ff0000';
+                    ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
+                }
+
+                // Check collision
+                if (checkCollision(player, obstacle)) {
+                    lives--;
+                    obstacles.splice(i, 1);
+                    
+                    if (lives <= 0) {
+                        endGame();
+                    }
+                }
+
+                // Remove off-screen obstacles
+                if (obstacle.x < -obstacle.width) {
+                    obstacles.splice(i, 1);
+                }
+            }
+        }
+
+        function updateCollectibles() {
+            for (let i = collectibles.length - 1; i >= 0; i--) {
+                const coin = collectibles[i];
+                coin.x -= gameSpeed;
+
+                // Animate floating
+                coin.y += Math.sin(Date.now() / 200) * 0.5;
+
+                // Draw collectible
+                if (images.coin.complete) {
+                    ctx.drawImage(images.coin, coin.x, coin.y, coin.width, coin.height);
+                } else {
+                    ctx.fillStyle = '#ffd700';
+                    ctx.beginPath();
+                    ctx.arc(coin.x + coin.width/2, coin.y + coin.height/2, coin.width/2, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                // Check collection
+                if (checkCollision(player, coin)) {
+                    coins++;
+                    score += 10;
+                    collectibles.splice(i, 1);
+                }
+
+                // Remove off-screen collectibles
+                if (coin.x < -coin.width) {
+                    collectibles.splice(i, 1);
+                }
+            }
+        }
+
+        function checkCollision(a, b) {
+            return a.x < b.x + b.width &&
+                   a.x + a.width > b.x &&
+                   a.y < b.y + b.height &&
+                   a.y + a.height > b.y;
+        }
+
+        function updateStats() {
+            document.getElementById('score').textContent = score;
+            document.getElementById('highScore').textContent = highScore;
+            document.getElementById('coins').textContent = coins;
+            document.getElementById('lives').textContent = lives;
+        }
+
+        function endGame() {
+            gameRunning = false;
+            document.getElementById('finalScore').textContent = score;
+            document.getElementById('gameOver').classList.add('active');
+            
+            if (score > highScore) {
+                highScore = score;
+                localStorage.setItem('ethRunnerHighScore', highScore);
+            }
+        }
+
+        function restartGame() {
+            startGame();
+        }
+
+        // Controls
+        document.addEventListener('keydown', (e) => {
+            if (!gameRunning) return;
+
+            if (e.key === 'ArrowUp' && !player.jumping) {
+                player.jumping = true;
+                player.velY = -15;
+            }
+            
+            if (e.key === 'ArrowDown') {
+                player.sliding = true;
+            }
+        });
+
+        document.addEventListener('keyup', (e) => {
+            if (e.key === 'ArrowDown') {
+                player.sliding = false;
+            }
+        });
+
+        // Auto-start generation on load
+        window.onload = () => {
+            document.getElementById('highScore').textContent = highScore;
+            // Show completed state immediately
+            setTimeout(() => {
+                document.getElementById('playBtn').disabled = false;
+            }, 1000);
+        };
+    </script>
+</body>
+</html>
