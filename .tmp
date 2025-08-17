@@ -13,3 +13,6 @@ eyJhbGciOiJLTVNFUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3OTE0Mjc2MjQsImp0aSI6ImIwY2Z
 curl --request GET \
   --url 'https://token-api.thegraph.com/balances/evm/{address}?network_id=mainnet&limit=10&page=1' \
   --header 'Authorization: Bearer {token}'
+
+
+  0x1e45fB0BA739d6D03530E3D9cA16EA004aEaBF01
