@@ -83,11 +83,11 @@ async function seedEndpoints() {
         },
       } as const,
     },
-    // ElevenLabs TTS Endpoints - Different voices
+    // ElevenLabs TTS Endpoint with default voice
     {
       id: nanoid(10),
-      name: 'ElevenLabs TTS',
-      targetUrl: 'https://api.elevenlabs.io/v1', // Base URL
+      name: 'ElevenLabs TTS - Rachel',
+      targetUrl: 'https://api.elevenlabs.io/v1/text-to-speech/21m00Tcm4TlvDq8ikWAM', // Rachel voice
       authType: 'header',
       authKey: 'xi-api-key',
       authValue: elevenLabsKey,
@@ -96,38 +96,142 @@ async function seedEndpoints() {
       price: '$0.014',
       walletAddress: '0x81d786b35f3EA2F39Aa17cb18d9772E4EcD97206',
       metadata: {
-        description: 'Convert text to speech with various voices',
-        voices: [
-          { id: 'NOpBlnGInO9m6vDvFkFC', name: 'Grandpa spuds' },
-          { id: '21m00Tcm4TlvDq8ikWAM', name: 'Rachel' },
+        description: 'Convert text to speech using Rachel voice (clear American accent)',
+        availableVoices: [
+          { id: '21m00Tcm4TlvDq8ikWAM', name: 'Rachel (used by default)' },
+          { id: 'JBFqnCBsd6RMkjVDRZzb', name: 'George' },
           { id: 'nPczCjzI2devNBz1zQrb', name: 'Brian' },
-          { id: 'JBFqnCBsd6RMkjVDRZzb', name: 'Default Voice' },
+          { id: 'NOpBlnGInO9m6vDvFkFC', name: 'Grandpa' },
+          { id: 'onwK4e9ZLuTAKqWW03F9', name: 'Daniel (British)' },
         ],
         usage: {
           method: 'POST',
-          path: '/text-to-speech/{voice_id}', // Append to base URL
-          queryParams: {
-            output_format: 'mp3_44100_128', // Options: mp3_44100_128, mp3_22050_32, etc.
+          path: '', // No additional path needed - voice ID is in targetUrl
+          params: {
+            output_format: 'mp3_44100_128', // Add as query parameter
           },
           body: {
             text: 'Your text to convert to speech',
-            model_id: 'eleven_multilingual_v2', // or eleven_monolingual_v1
+            model_id: 'eleven_multilingual_v2',
+            voice_settings: {
+              stability: 0.5,
+              similarity_boost: 0.75,
+            },
           },
           response: {
             format: 'audio/mpeg',
             description: 'Returns MP3 audio binary data',
           },
         },
+        examples: [
+          {
+            description: 'Simple TTS request',
+            body: {
+              text: 'Hello world, this is a test.',
+              model_id: 'eleven_multilingual_v2',
+            },
+          },
+          {
+            description: 'Movie trailer narration',
+            body: {
+              text: 'In a world... where developers code for forty-eight hours straight... One hackathon will change everything.',
+              model_id: 'eleven_multilingual_v2',
+              voice_settings: {
+                stability: 0.3,
+                similarity_boost: 0.8,
+              },
+            },
+          },
+        ],
         aiExample: {
-          description: 'To generate speech, use POST with voice ID in path',
-          mcp: 'mcp__x402-marketplace__call_api with apiId, method="POST", path="/text-to-speech/21m00Tcm4TlvDq8ikWAM", params={"output_format": "mp3_44100_128"}, body={"text": "Hello world", "model_id": "eleven_multilingual_v2"}',
+          description: 'To generate speech with Rachel voice',
+          mcp: 'mcp__x402-marketplace__call_api with apiId, method="POST", params={"output_format": "mp3_44100_128"}, body={"text": "Your text here", "model_id": "eleven_multilingual_v2"}',
+        },
+        notes: [
+          'This endpoint uses Rachel voice by default (clear American accent)',
+          'For other voices, you would need to create separate endpoints with different voice IDs',
+          'The output_format should be passed as a query parameter',
+          'Voice settings are optional but can improve quality',
+        ],
+      } as const,
+    },
+    {
+      id: nanoid(10),
+      name: 'ElevenLabs TTS - Brian',
+      targetUrl: 'https://api.elevenlabs.io/v1/text-to-speech/nPczCjzI2devNBz1zQrb', // Brian voice (deep American)
+      authType: 'header',
+      authKey: 'xi-api-key',
+      authValue: elevenLabsKey,
+      requiresPayment: true,
+      createdAt: new Date(),
+      price: '$0.014',
+      walletAddress: '0x81d786b35f3EA2F39Aa17cb18d9772E4EcD97206',
+      metadata: {
+        description: 'Convert text to speech using Brian voice (deep American male voice)',
+        usage: {
+          method: 'POST',
+          path: '',
+          params: {
+            output_format: 'mp3_44100_128',
+          },
+          body: {
+            text: 'Your text to convert to speech',
+            model_id: 'eleven_multilingual_v2',
+          },
+        },
+        aiExample: {
+          description: 'To generate speech with Brian voice',
+          mcp: 'mcp__x402-marketplace__call_api with apiId, method="POST", params={"output_format": "mp3_44100_128"}, body={"text": "Your text here", "model_id": "eleven_multilingual_v2"}',
+        },
+      } as const,
+    },
+    {
+      id: nanoid(10),
+      name: 'ElevenLabs TTS - Grandpa Spuds',
+      targetUrl: 'https://api.elevenlabs.io/v1/text-to-speech/NOpBlnGInO9m6vDvFkFC', // Grandpa Spuds voice
+      authType: 'header',
+      authKey: 'xi-api-key',
+      authValue: elevenLabsKey,
+      requiresPayment: true,
+      createdAt: new Date(),
+      price: '$0.014',
+      walletAddress: '0x81d786b35f3EA2F39Aa17cb18d9772E4EcD97206',
+      metadata: {
+        description: 'Convert text to speech using Grandpa Spuds voice (elderly character voice)',
+        usage: {
+          method: 'POST',
+          path: '',
+          params: {
+            output_format: 'mp3_44100_128',
+          },
+          body: {
+            text: 'Your text to convert to speech',
+            model_id: 'eleven_multilingual_v2',
+            voice_settings: {
+              stability: 0.5,
+              similarity_boost: 0.75,
+            },
+          },
+        },
+        examples: [
+          {
+            description: 'Grandpa telling a story',
+            body: {
+              text: 'Back in my day, we had to mine Bitcoin with pencil and paper!',
+              model_id: 'eleven_multilingual_v2',
+            },
+          },
+        ],
+        aiExample: {
+          description: 'To generate speech with Grandpa Spuds voice',
+          mcp: 'mcp__x402-marketplace__call_api with apiId, method="POST", params={"output_format": "mp3_44100_128"}, body={"text": "Your text here", "model_id": "eleven_multilingual_v2"}',
         },
       } as const,
     },
     {
       id: nanoid(10),
       name: 'ElevenLabs Sound Effects',
-      targetUrl: 'https://api.elevenlabs.io/v1', // Base URL - path will be appended
+      targetUrl: 'https://api.elevenlabs.io/v1/sound-generation', // Full URL with path
       authType: 'header',
       authKey: 'xi-api-key',
       authValue: elevenLabsKey,
@@ -136,16 +240,16 @@ async function seedEndpoints() {
       price: '$0.015',
       walletAddress: '0x81d786b35f3EA2F39Aa17cb18d9772E4EcD97206',
       metadata: {
-        description: 'Generate sound effects from text descriptions',
+        description: 'Generate sound effects from text descriptions using AI',
         usage: {
           method: 'POST',
-          path: '/sound-generation', // This path is appended to the base URL
-          queryParams: {
-            output_format: 'mp3_44100_128', // Optional: mp3_44100_128, mp3_22050_32, etc.
+          path: '', // No additional path needed - full path is in targetUrl
+          params: {
+            output_format: 'mp3_44100_128', // Optional query parameter
           },
           body: {
             text: 'Description of the sound effect you want',
-            duration_seconds: null, // Optional: 0.5 to 22 seconds, null for auto
+            duration_seconds: 5.0, // Optional: 0.5 to 22 seconds, null for auto
             prompt_influence: 0.3, // Optional: 0 to 1, higher = more prompt adherence
           },
           response: {
@@ -154,15 +258,45 @@ async function seedEndpoints() {
           },
         },
         examples: [
-          { text: 'Laser gun blast with echo, sci-fi weapon' },
-          { text: 'Thunder rumble with rain, distant storm' },
-          { text: 'Spacious braam suitable for high-impact movie trailer moments' },
-          { text: 'Magical spell casting sound with sparkles' },
+          {
+            description: 'Movie trailer sound',
+            body: {
+              text: 'Epic cinematic orchestral music with powerful drums and brass',
+              duration_seconds: 10,
+            },
+          },
+          {
+            description: 'Hackathon ambiance',
+            body: {
+              text: 'Busy office sounds with keyboard typing, mouse clicks, coffee brewing',
+              duration_seconds: 8,
+            },
+          },
+          {
+            description: 'Victory fanfare',
+            body: {
+              text: 'Triumphant orchestral fanfare with cheering crowd',
+              duration_seconds: 5,
+            },
+          },
+          {
+            description: 'Sci-fi effect',
+            body: {
+              text: 'Laser gun blast with echo, sci-fi weapon',
+              duration_seconds: 2,
+            },
+          },
         ],
         aiExample: {
-          description: 'To generate sound effects, use POST to /sound-generation',
-          mcp: 'mcp__x402-marketplace__call_api with apiId, method="POST", path="/sound-generation", body={"text": "laser gun blast", "duration_seconds": 2.5}',
+          description: 'To generate sound effects',
+          mcp: 'mcp__x402-marketplace__call_api with apiId, method="POST", body={"text": "epic movie trailer music", "duration_seconds": 10}',
         },
+        notes: [
+          'Duration is optional but recommended (0.5 to 22 seconds)',
+          'Longer durations may take more time to generate',
+          'The AI interprets your text description creatively',
+          'For voice/speech, use the TTS endpoint instead',
+        ],
       } as const,
     },
     // Replicate AI Models

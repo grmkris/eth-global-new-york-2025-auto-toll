@@ -22,11 +22,14 @@ Create an absolutely hilarious and epic landing page for ETH Global NYC 2025 tha
 | Chuck Norris | eSAs8uq77Q | Joke #8 | $0.0011 | 0xc4549a6305b3108588e405f46c6893cfda4a609956bf61a9b78417ba73cf677b | 2025-08-17 |
 | Chuck Norris | eSAs8uq77Q | Joke #9 | $0.0011 | 0x0564d55ad6c7e46d3f3031ba9e079b6a6582e3b1a47f802ee0f633301376e4a2 | 2025-08-17 |
 | Chuck Norris | eSAs8uq77Q | Joke #10 | $0.0011 | 0x16f6bf53ae00dc2a8675a6cac1e2e86f3dfc8b3961d9a23efa6e7924f9dab000 | 2025-08-17 |
+| ElevenLabs SFX | ZTr5F4b9ET | Hackathon Vibes Sound | $0.015 | N/A | 2025-08-17 |
+| ElevenLabs SFX | ZTr5F4b9ET | Epic Intro Music | $0.015 | N/A | 2025-08-17 |
 
 ## Total Cost
 - Replicate Images: 5 × $0.003 = $0.015
 - Chuck Norris Jokes: 10 × $0.0011 = $0.011
-- **Total Experiment Cost: $0.026**
+- ElevenLabs Sound Effects: 2 × $0.015 = $0.030
+- **Total Experiment Cost: $0.056**
 
 ## Generated Assets
 
@@ -36,6 +39,10 @@ Create an absolutely hilarious and epic landing page for ETH Global NYC 2025 tha
 3. **vitalik-taxi.png** - Vitalik as NYC taxi driver explaining blockchain
 4. **hackathon-cave.png** - Exhausted developers in dark room surrounded by pizza boxes
 5. **bull-vs-eth.png** - Wall Street Bull battling giant Ethereum logo
+
+### Audio Files
+1. **epic-intro.mp3** - 7-second dramatic movie trailer music with epic drums
+2. **hackathon-vibes.mp3** - 5-second hackathon energy with typing and celebration sounds
 
 ### Chuck Norris Jokes (Collected)
 - Original jokes transformed into blockchain-themed wisdom in the HTML
